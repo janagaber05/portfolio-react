@@ -1,0 +1,36 @@
+.curved-loop-jacket{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.curved-loop-svg{
+  user-select:none;
+  width:100%;
+  aspect-ratio:100 / 12;
+  overflow:visible;
+  display:block;
+  font-size:3rem;
+  fill:#f7f2ef;
+  text-transform:uppercase;
+  line-height:1;
+  font-weight:700;
+}
+
+.curved-loop-svg textPath{
+  letter-spacing:0.2em;
+}
+
+@media (max-width:960px){
+  .curved-loop-svg{
+    font-size:2.6rem;
+  }
+}
+
+@media (max-width:720px){
+  .curved-loop-svg{
+    font-size:2.2rem;
+  }
+}
+

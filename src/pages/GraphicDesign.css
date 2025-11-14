@@ -1,0 +1,26 @@
+.hero-split{display:flex; align-items:center; justify-content:space-between; gap:36px; padding:60px 20px}
+.hero-split .hero-content{flex:1 1 44%}
+.hero-split .hero-media{flex:1 1 56%; max-height:420px; overflow:hidden}
+.hero-split .hero-media img{width:100%; height:100%; object-fit:contain; display:block}
+.hero-split .hero-title{color:var(--pink-2); text-align:left; font-size:clamp(36px, 6.2vw, 72px); line-height:1.08; font-weight:600}
+.hero-split .btn{margin-top:18px}
+.work-list{display:flex; flex-direction:column; gap:28px}
+.work-item{display:flex; gap:22px; align-items:flex-start}
+.work-media{flex:0 0 140px; height:140px; overflow:hidden; border-radius:16px; box-shadow:0 16px 50px rgba(0,0,0,.45)}
+.work-media img{width:100%; height:100%; object-fit:cover}
+.work-body{flex:1; display:flex; flex-direction:column; gap:10px}
+.btn-right{align-self:flex-end}
+.work-body h4{margin:0 0 8px; font-weight:800; color:#f6f0ec}
+.work-body p{margin:0 0 10px; color:var(--panel)}
+.tips-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:28px; padding:60px 20px}
+.tip-card{background:linear-gradient(180deg,#f8c8dc,#f3b8c5); color:#111; border-radius:18px; padding:18px 20px; box-shadow:0 10px 30px rgba(255,0,128,.25), 0 0 18px rgba(255,0,160,.55), 0 0 42px rgba(255,0,160,.35); margin-bottom:16px}
+.tip-card h5{margin:0 0 8px; font-weight:800}
+.tips-media{border-radius:22px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.tips-media img{width:100%; height:100%; object-fit:cover; display:block}
+@media (max-width:980px){
+  .hero-split{flex-direction:column; padding:40px 16px}
+  .tips-grid{grid-template-columns:1fr; padding:40px 16px}
+  .work-media{flex-basis:110px; height:110px}
+}
+
+

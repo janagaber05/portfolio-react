@@ -1,0 +1,197 @@
+.chroma-grid{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(var(--cols,3), var(--card-size, 220px));
+  grid-auto-rows:var(--card-size, 220px);
+  justify-content:center;
+  gap:0.75rem;
+  max-width:1200px;
+  margin:0 auto;
+  padding:1rem;
+  box-sizing:border-box;
+  --x:50%;
+  --y:50%;
+  --r:220px;
+}
+
+@media (max-width:1124px){
+  .chroma-grid{
+    grid-template-columns:repeat(auto-fit, minmax(var(--card-size, 220px), 1fr));
+    gap:0.5rem;
+    padding:0.5rem;
+  }
+}
+
+@media (max-width:480px){
+  .chroma-grid{
+    grid-template-columns:minmax(0, var(--card-size, 220px));
+    justify-content:center;
+    gap:0.75rem;
+    padding:1rem;
+  }
+}
+
+.chroma-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  width:var(--card-size, 220px);
+  height:var(--card-size, 220px);
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.12);
+  transition:border-color 0.3s ease, transform 0.3s ease;
+  background:var(--card-gradient, linear-gradient(160deg, rgba(106,78,210,0.78), rgba(46,24,102,0.88)));
+  --mouse-x:50%;
+  --mouse-y:50%;
+  --spotlight-color:rgba(255,255,255,0.3);
+  box-shadow:
+    0 22px 50px rgba(12,8,45,0.45),
+    inset 0 0 22px rgba(255,255,255,0.06);
+}
+
+.chroma-card:hover{
+  border-color:var(--card-border);
+  transform:translateY(-6px);
+}
+
+.chroma-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.45s ease;
+  z-index:2;
+}
+
+.chroma-card:hover::before{
+  opacity:1;
+}
+
+.chroma-card--compact{
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.chroma-icon{
+  width:70%;
+  max-width:96px;
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  background:rgba(255,255,255,0.08);
+  box-shadow:inset 0 0 22px rgba(255,255,255,0.12);
+}
+
+.chroma-icon img{
+  width:70%;
+  height:70%;
+  object-fit:contain;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+}
+
+.chroma-icon__fallback{
+  width:45%;
+  height:45%;
+  border-radius:50%;
+  background:linear-gradient(135deg, rgba(248,200,220,0.65), rgba(134,106,255,0.75));
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+}
+
+.chroma-img-wrapper{
+  position:relative;
+  z-index:1;
+  flex:1;
+  padding:10px;
+  box-sizing:border-box;
+  background:transparent;
+  transition:background 0.3s ease;
+}
+
+.chroma-img-wrapper img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+  display:block;
+}
+
+.chroma-info{
+  position:relative;
+  z-index:1;
+  padding:0.75rem 1rem;
+  color:#fff;
+  font-family:var(--kufam, system-ui, sans-serif);
+  display:grid;
+  grid-template-columns:1fr auto;
+  row-gap:0.25rem;
+  column-gap:0.75rem;
+}
+
+.chroma-info .role,
+.chroma-info .handle{
+  color:#c5bdd6;
+}
+
+.chroma-overlay,
+.chroma-fade{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:3;
+  backdrop-filter:grayscale(0.75) brightness(0.95);
+  -webkit-backdrop-filter:grayscale(0.75) brightness(0.95);
+  background:rgba(0,0,0,0.001);
+}
+
+.chroma-overlay{
+  mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),
+    transparent 0%,
+    transparent 15%,
+    rgba(0,0,0,0.1) 30%,
+    rgba(0,0,0,0.22) 45%,
+    rgba(0,0,0,0.35) 60%,
+    rgba(0,0,0,0.5) 75%,
+    rgba(0,0,0,0.68) 88%,
+    white 100%);
+  -webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),
+    transparent 0%,
+    transparent 15%,
+    rgba(0,0,0,0.1) 30%,
+    rgba(0,0,0,0.22) 45%,
+    rgba(0,0,0,0.35) 60%,
+    rgba(0,0,0,0.5) 75%,
+    rgba(0,0,0,0.68) 88%,
+    white 100%);
+}
+
+.chroma-fade{
+  mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),
+    white 0%,
+    white 15%,
+    rgba(255,255,255,0.9) 30%,
+    rgba(255,255,255,0.78) 45%,
+    rgba(255,255,255,0.65) 60%,
+    rgba(255,255,255,0.5) 75%,
+    rgba(255,255,255,0.32) 88%,
+    transparent 100%);
+  -webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),
+    white 0%,
+    white 15%,
+    rgba(255,255,255,0.9) 30%,
+    rgba(255,255,255,0.78) 45%,
+    rgba(255,255,255,0.65) 60%,
+    rgba(255,255,255,0.5) 75%,
+    rgba(255,255,255,0.32) 88%,
+    transparent 100%);
+  opacity:1;
+  transition:opacity 0.25s ease;
+}
+

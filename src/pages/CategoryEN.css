@@ -75,6 +75,25 @@
   padding:60px 20px;
   min-height:600px;
 }
+.cat-gallery-wrapper{
+  height:600px;
+  position:relative;
+}
+.subline-centered{
+  text-align:center;
+  margin-top:8px;
+}
+.muted-centered{
+  text-align:center;
+  max-width:720px;
+  margin:6px auto 14px;
+}
+.btn-wrapper-centered{
+  text-align:center;
+}
+.section-title-spaced{
+  margin-bottom:12px;
+}
 .cat-card{
   position:relative;
    height:260px;

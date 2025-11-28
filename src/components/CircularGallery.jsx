@@ -128,6 +128,9 @@ class Media {
     this.borderRadius = borderRadius;
     this.font = font;
     this.href = href;
+    this.imageWidth = 0;
+    this.imageHeight = 0;
+    this.imageLoaded = false;
     this.createShader();
     this.createMesh();
     this.createTitle();
@@ -206,7 +209,14 @@ class Media {
     img.src = this.image;
     img.onload = () => {
       texture.image = img;
+      this.imageWidth = img.naturalWidth;
+      this.imageHeight = img.naturalHeight;
+      this.imageLoaded = true;
       this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
+      // Recalculate size when image loads
+      if (this.screen && this.viewport) {
+        this.onResize({ screen: this.screen, viewport: this.viewport });
+      }
     };
   }
 
@@ -292,8 +302,29 @@ class Media {
     }
 
     this.scale = this.screen.height / 1500;
-    this.baseScaleY = (this.viewport.height * (900 * this.scale)) / this.screen.height;
-    this.baseScaleX = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+    
+    // Use actual image dimensions if loaded, otherwise use default aspect ratio
+    if (this.imageLoaded && this.imageWidth > 0 && this.imageHeight > 0) {
+      const imageAspect = this.imageWidth / this.imageHeight;
+      // Calculate base size based on viewport, maintaining image aspect ratio
+      const baseHeight = (this.viewport.height * 0.6);
+      const baseWidth = baseHeight * imageAspect;
+      
+      // Ensure it fits within reasonable bounds
+      const maxWidth = this.viewport.width * 0.4;
+      if (baseWidth > maxWidth) {
+        this.baseScaleX = maxWidth;
+        this.baseScaleY = maxWidth / imageAspect;
+      } else {
+        this.baseScaleX = baseWidth;
+        this.baseScaleY = baseHeight;
+      }
+    } else {
+      // Fallback to default size if image not loaded yet
+      this.baseScaleY = (this.viewport.height * (900 * this.scale)) / this.screen.height;
+      this.baseScaleX = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+    }
+    
     this.plane.scale.y = this.baseScaleY;
     this.plane.scale.x = this.baseScaleX;
     this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Layout from '../components/Layout';
@@ -46,7 +47,16 @@ export default function GraphicDesignEN() {
           <a className="btn" href="/#contact">Contact me</a>
         </div>
         <div className="hero-media">
-          <img src="/imgs/Frame 41.png" alt="Neon laptop with project cards" />
+          <img 
+            src="/imgs/graphic-desgin/hero-img.png" 
+            alt="Neon laptop with project cards" 
+            loading="eager"
+            onError={(e) => {
+              console.error('Hero image failed to load:', e.target.src);
+              e.target.style.border = '2px solid red';
+            }}
+            onLoad={() => console.log('Hero image loaded successfully')}
+          />
         </div>
       </section>
 
@@ -55,26 +65,49 @@ export default function GraphicDesignEN() {
         <div className="work-list">
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 37.png" alt="Sandy Skin folder mockup" />
+              <img 
+                src="/imgs/graphic-desgin/sandy-poject.png" 
+                alt="Sandy Skin folder mockup" 
+                loading="lazy"
+                onError={(e) => {
+              console.error('Sandy project image failed to load:', e.target.src);
+            }}
+          />
             </div>
             <div className="work-body">
               <h4>Sandy Skin – Folder Design</h4>
-              <p>A sleek folder for a skincare brand using soft pink and black to express elegance and confidence. I chose this mockup to highlight the brand’s professional and luxurious feel in a real-life context.</p>
+              <p>A sleek folder for a skincare brand using soft pink and black to express elegance and confidence. I chose this mockup to highlight the brand's professional and luxurious feel in a real-life context.</p>
             </div>
+          </article>
+          <article className="work-item work-item-clickable">
+            <Link to="/egy-air" className="work-item-link">
+              <div className="work-media">
+                <img 
+                  src="/imgs/graphic-desgin/egy-air-project.png" 
+                  alt="EGY Air bag mockup" 
+                  loading="lazy"
+                  onError={(e) => {
+                console.error('EGY Air image failed to load:', e.target.src);
+              }}
+            />
+              </div>
+              <div className="work-body">
+                <h4>EGY Air – Gift Bag Design</h4>
+                <p>A branded bag for an airline, combining purple and white for a modern, trustworthy look. The bag mockup was chosen to show how the brand identity translates into physical materials and customer experience.</p>
+                <span className="btn view-more btn-right">View Project</span>
+              </div>
+            </Link>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/IMG_4737 2.png" alt="EGY Air bag mockup" />
-            </div>
-            <div className="work-body">
-              <h4>EGY Air – Gift Bag Design</h4>
-              <p>A branded bag for an airline, combining purple and white for a modern, trustworthy look. The bag mockup was chosen to show how the brand identity translates into physical materials and customer experience.</p>
-              <a className="btn view-more btn-right" href="/egy-air">View Project</a>
-            </div>
-          </article>
-          <article className="work-item">
-            <div className="work-media">
-              <img src="/imgs/Frame 40.png" alt="Sonic Colors settings redesign" />
+              <img 
+                src="/imgs/graphic-desgin/sonic-game.png" 
+                alt="Sonic Colors settings redesign" 
+                loading="lazy"
+                onError={(e) => {
+              console.error('Sonic game image failed to load:', e.target.src);
+            }}
+          />
             </div>
             <div className="work-body">
               <h4>Sonic Colors Ultimate – Game Settings Rebrand</h4>
@@ -98,7 +131,7 @@ export default function GraphicDesignEN() {
           <h3 className="section-label">tips each <span className="accent">Graphic Designer</span> should know</h3>
           <div className="tip-card-wrapper">
             <TiltedCard
-              imageSrc="/imgs/Frame 37.png"
+              imageSrc="/imgs/graphic-desgin/tips-img.png"
               altText="Design with Purpose"
               captionText=""
               containerHeight="200px"
@@ -164,11 +197,19 @@ export default function GraphicDesignEN() {
           </div>
         </div>
         <div className="tips-media">
-          <img src="/imgs/Frame 42.png" alt="Neon desk with sticky notes" />
+          <img 
+            src="/imgs/graphic-desgin/tips-img.png" 
+            alt="Neon desk with sticky notes" 
+            loading="lazy"
+            onError={(e) => {
+              console.error('Tips image failed to load:', e.target.src);
+            }}
+            onLoad={() => console.log('Tips image loaded successfully')}
+          />
         </div>
       </section>
 
-      <section className="cta-band" aria-label="Work together" style={{ backgroundImage: "url('/imgs/us working together.png')" }}>
+      <section className="cta-band" aria-label="Work together" style={{backgroundImage:"url('/imgs/us working together.png')"}}>
         <div className="container centered">
           <p className="muted">Do you know what's Missing</p>
           <h3 className="section-title centered">Us Working Together</h3>
@@ -178,5 +219,3 @@ export default function GraphicDesignEN() {
     </Layout>
   );
 }
-
-

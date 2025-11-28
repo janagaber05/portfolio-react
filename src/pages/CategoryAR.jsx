@@ -29,9 +29,9 @@ export default function CategoryAR() {
               { image: '/imgs/category/app-design-category.png', text: 'تصميم تطبيقات', href: '/app-design-ar' },
               { image: '/imgs/category/web-desogn-category.png', text: 'تصميم ويب', href: '/web-design-ar' },
               { image: '/imgs/category/graphic-design-category.png', text: 'تصميم جرافيك', href: '/graphic-design-ar' },
-              { image: '/imgs/category/coding-category.png', text: 'برمجة', href: '/ar#skills' },
+              { image: '/imgs/category/coding-category.png', text: 'برمجة', href: '/404-ar' },
               { image: '/imgs/category/blogs-category.png', text: 'المدونة', href: '/blogs-ar' },
-              { image: '/imgs/category/3d-category.png', text: '3D', href: '/3d-design-ar' }
+              { image: '/imgs/category/3d-category.png', text: '3D', href: '/404-ar' }
             ]}
             bend={3}
             textColor="#ffffff"

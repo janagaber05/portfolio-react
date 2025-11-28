@@ -110,7 +110,9 @@ class Media {
     textColor,
     borderRadius = 0,
     font,
-    href
+    href,
+    app,
+    originalIndex
   }) {
     this.extra = 0;
     this.geometry = geometry;
@@ -128,12 +130,23 @@ class Media {
     this.borderRadius = borderRadius;
     this.font = font;
     this.href = href;
+    this.app = app;
+    // Store originalIndex - this is critical for correct navigation
+    // If originalIndex is provided, use it; otherwise calculate from index
+    if (originalIndex !== undefined) {
+      this.originalIndex = originalIndex;
+    } else if (app && app.originalItems && app.originalItems.length > 0) {
+      this.originalIndex = index % app.originalItems.length;
+    } else {
+      // Fallback: assume length is double the original (because we duplicate)
+      this.originalIndex = index % (length / 2);
+    }
     this.imageWidth = 0;
     this.imageHeight = 0;
     this.imageLoaded = false;
     this.createShader();
     this.createMesh();
-    this.createTitle();
+    // this.createTitle(); // Text under cards removed
     this.onResize();
   }
 
@@ -213,8 +226,24 @@ class Media {
       this.imageHeight = img.naturalHeight;
       this.imageLoaded = true;
       this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
-      // Recalculate size when image loads
-      if (this.screen && this.viewport) {
+      
+      // Set shared size based on first loaded image
+      if (this.app && !this.app.sharedImageSize && this.imageWidth > 0 && this.imageHeight > 0) {
+        this.app.sharedImageSize = {
+          width: this.imageWidth,
+          height: this.imageHeight,
+          aspect: this.imageWidth / this.imageHeight
+        };
+        // Trigger resize for all medias when first image loads
+        if (this.app.medias) {
+          this.app.medias.forEach(media => {
+            if (media.screen && media.viewport) {
+              media.onResize({ screen: media.screen, viewport: media.viewport });
+            }
+          });
+        }
+      } else if (this.screen && this.viewport) {
+        // If shared size already exists, just resize this one
         this.onResize({ screen: this.screen, viewport: this.viewport });
       }
     };
@@ -301,28 +330,38 @@ class Media {
       }
     }
 
-    this.scale = this.screen.height / 1500;
-    
-    // Use actual image dimensions if loaded, otherwise use default aspect ratio
-    if (this.imageLoaded && this.imageWidth > 0 && this.imageHeight > 0) {
-      const imageAspect = this.imageWidth / this.imageHeight;
-      // Calculate base size based on viewport, maintaining image aspect ratio
-      const baseHeight = (this.viewport.height * 0.6);
-      const baseWidth = baseHeight * imageAspect;
-      
-      // Ensure it fits within reasonable bounds
-      const maxWidth = this.viewport.width * 0.4;
-      if (baseWidth > maxWidth) {
-        this.baseScaleX = maxWidth;
-        this.baseScaleY = maxWidth / imageAspect;
-      } else {
-        this.baseScaleX = baseWidth;
-        this.baseScaleY = baseHeight;
-      }
+    // Use shared image size if available (from first loaded image), otherwise use this image's dimensions
+    let imageAspect;
+    if (this.app && this.app.sharedImageSize) {
+      imageAspect = this.app.sharedImageSize.aspect;
+    } else if (this.imageLoaded && this.imageWidth > 0 && this.imageHeight > 0) {
+      imageAspect = this.imageWidth / this.imageHeight;
     } else {
-      // Fallback to default size if image not loaded yet
-      this.baseScaleY = (this.viewport.height * (900 * this.scale)) / this.screen.height;
-      this.baseScaleX = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+      // Fallback to default aspect ratio
+      imageAspect = 700 / 900;
+    }
+
+    // Detect smaller screens and increase card size
+    const isSmallScreen = this.screen.width < 768;
+    const sizeMultiplier = isSmallScreen ? 1.5 : 1.0; // 50% bigger on small screens
+
+    // Calculate size based on viewport, maintaining image aspect ratio
+    const baseHeight = this.viewport.height * 0.5 * sizeMultiplier;
+    const calculatedWidth = baseHeight * imageAspect;
+    
+    // Ensure it fits within viewport bounds (adjusted for small screens)
+    const maxWidth = this.viewport.width * (isSmallScreen ? 0.5 : 0.35);
+    const maxHeight = this.viewport.height * (isSmallScreen ? 0.75 : 0.6);
+    
+    if (calculatedWidth > maxWidth) {
+      this.baseScaleX = maxWidth;
+      this.baseScaleY = maxWidth / imageAspect;
+    } else if (baseHeight > maxHeight) {
+      this.baseScaleY = maxHeight;
+      this.baseScaleX = maxHeight * imageAspect;
+    } else {
+      this.baseScaleX = calculatedWidth;
+      this.baseScaleY = baseHeight;
     }
     
     this.plane.scale.y = this.baseScaleY;
@@ -331,6 +370,7 @@ class Media {
 
     this.padding = 2;
     this.width = this.plane.scale.x + this.padding;
+    // widthTotal is calculated per media, but should be consistent across all
     this.widthTotal = this.width * this.length;
     this.x = this.width * this.index;
   }
@@ -396,7 +436,9 @@ class App {
 
   createMedias(items, bend = 1, textColor, borderRadius, font) {
     const galleryItems = items && items.length ? items : [];
+    this.originalItems = galleryItems; // Store original items for reference
     this.mediasImages = galleryItems.concat(galleryItems);
+    this.sharedImageSize = null; // Will store common size for all cards
     this.medias = this.mediasImages.map((data, index) => {
       return new Media({
         geometry: this.planeGeometry,
@@ -413,7 +455,9 @@ class App {
         textColor,
         borderRadius,
         font,
-        href: data.href
+        href: data.href,
+        app: this, // Pass app reference to access shared size
+        originalIndex: index % galleryItems.length // Store original index
       });
     });
   }
@@ -456,67 +500,207 @@ class App {
   }
 
   onClick(x, y) {
-    if (!this.medias || this.medias.length === 0) return;
+    if (!this.medias || this.medias.length === 0 || !this.originalItems) return;
     
     const rect = this.container.getBoundingClientRect();
     const relativeX = x - rect.left;
     const relativeY = y - rect.top;
     
-    // Convert screen coordinates to normalized device coordinates
-    const ndcX = (relativeX / this.screen.width) * 2 - 1;
-    const ndcY = 1 - (relativeY / this.screen.height) * 2;
-    
     let closestMedia = null;
     let closestDistance = Infinity;
+    const screenCenterX = this.screen.width / 2;
     
-    this.medias.forEach(media => {
+    // Find all cards that contain the click point
+    const candidates = [];
+    
+    this.medias.forEach((media) => {
       const plane = media.plane;
       
-      // Project 3D position to screen space
-      const worldPos = [plane.position.x, plane.position.y, plane.position.z];
-      const viewMatrix = this.camera.viewMatrix;
-      const projMatrix = this.camera.projectionMatrix;
+      // Calculate card position on screen
+      const cardScreenX = (plane.position.x / this.viewport.width) * this.screen.width + screenCenterX;
+      const cardScreenY = (plane.position.y / this.viewport.height) * this.screen.height + this.screen.height / 2;
       
-      // Simple 2D distance check based on viewport
-      const viewportX = (plane.position.x / this.viewport.width) * this.screen.width + this.screen.width / 2;
-      const viewportY = (plane.position.y / this.viewport.height) * this.screen.height + this.screen.height / 2;
+      const cardWidth = (plane.scale.x / this.viewport.width) * this.screen.width;
+      const cardHeight = (plane.scale.y / this.viewport.height) * this.screen.height;
       
-      const distanceX = Math.abs(relativeX - viewportX);
-      const distanceY = Math.abs(relativeY - viewportY);
+      // Check if card is visible (within screen bounds)
+      const isVisible = 
+        cardScreenX + cardWidth / 2 > 0 && 
+        cardScreenX - cardWidth / 2 < this.screen.width &&
+        cardScreenY + cardHeight / 2 > 0 && 
+        cardScreenY - cardHeight / 2 < this.screen.height;
       
-      const planeWidth = (plane.scale.x / this.viewport.width) * this.screen.width;
-      const planeHeight = (plane.scale.y / this.viewport.height) * this.screen.height;
+      if (!isVisible) return;
+      
+      // Calculate distance from click to card center
+      const distanceX = relativeX - cardScreenX;
+      const distanceY = relativeY - cardScreenY;
+      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
       
       // Check if click is within card bounds
-      if (distanceX < planeWidth / 2 && distanceY < planeHeight / 2) {
-        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-        const maxDistance = Math.max(planeWidth, planeHeight) / 2;
+      if (Math.abs(distanceX) < cardWidth / 2 && Math.abs(distanceY) < cardHeight / 2) {
+        // Calculate how close this card is to the center of the screen
+        const distanceFromCenter = Math.abs(cardScreenX - screenCenterX);
         
-        if (distance < maxDistance && distance < closestDistance) {
-          closestDistance = distance;
-          closestMedia = media;
-        }
+        // Get the original index directly from the media instance
+      // This is critical - we need to use the stored originalIndex, not calculate it
+      const originalIndex = media.originalIndex !== undefined 
+        ? media.originalIndex 
+        : (media.index % this.originalItems.length);
+      
+      // Verify the originalIndex matches what we expect
+      const expectedIndex = media.index % this.originalItems.length;
+      if (originalIndex !== expectedIndex && media.originalIndex === undefined) {
+        console.warn('OriginalIndex mismatch:', {
+          mediaIndex: media.index,
+          storedOriginalIndex: media.originalIndex,
+          calculatedIndex: expectedIndex,
+          mediaText: media.text
+        });
+      }
+        
+        candidates.push({
+          media,
+          distance,
+          distanceFromCenter,
+          originalIndex: originalIndex,
+          mediaIndex: media.index,
+          mediaText: media.text
+        });
       }
     });
     
-    if (closestMedia && closestMedia.href) {
-      if (closestMedia.href.startsWith('http')) {
-        window.open(closestMedia.href, '_blank');
-      } else if (closestMedia.href.startsWith('#')) {
+    // If we have candidates, prioritize by:
+    // 1. Distance from click point (closer = better)
+    // 2. Distance from center (more centered = better, but less important)
+    if (candidates.length > 0) {
+      // Sort primarily by click distance, then by center distance as tiebreaker
+      candidates.sort((a, b) => {
+        // Primary sort: distance from click (closer is better)
+        const clickDiff = a.distance - b.distance;
+        if (Math.abs(clickDiff) > 5) {
+          return clickDiff;
+        }
+        // Secondary sort: distance from center (more centered is better)
+        return a.distanceFromCenter - b.distanceFromCenter;
+      });
+      
+      closestMedia = candidates[0].media;
+    }
+    
+    if (closestMedia) {
+      // Get the original item index - use the one from candidates to ensure accuracy
+      const candidate = candidates.find(c => c.media === closestMedia);
+      let originalIndex;
+      
+      if (candidate) {
+        originalIndex = candidate.originalIndex;
+      } else {
+        // Fallback: calculate from media index
+        originalIndex = closestMedia.originalIndex !== undefined 
+          ? closestMedia.originalIndex 
+          : (closestMedia.index % this.originalItems.length);
+      }
+      
+      // Debug: log what we found
+      console.log('Click detected:', {
+        mediaIndex: closestMedia.index,
+        mediaText: closestMedia.text,
+        calculatedOriginalIndex: closestMedia.index % this.originalItems.length,
+        storedOriginalIndex: closestMedia.originalIndex,
+        candidateOriginalIndex: candidate ? candidate.originalIndex : null,
+        finalOriginalIndex: originalIndex,
+        allCandidates: candidates.map(c => ({
+          text: c.media.text,
+          originalIndex: c.originalIndex,
+          distance: c.distance,
+          distanceFromCenter: c.distanceFromCenter
+        })),
+        allItems: this.originalItems.map((item, idx) => ({ idx, text: item.text, href: item.href }))
+      });
+      
+      // Ensure we have a valid index within bounds
+      const safeIndex = Math.max(0, Math.min(originalIndex, this.originalItems.length - 1));
+      const originalItem = this.originalItems[safeIndex];
+      
+      // Always use href from originalItems array, not from the media instance
+      // This ensures we get the correct href even if cards are duplicated
+      const href = originalItem ? originalItem.href : null;
+      
+      console.log('Navigation:', {
+        safeIndex,
+        originalItemText: originalItem ? originalItem.text : null,
+        href
+      });
+      
+      if (!href || href === '#') {
+        // If href is empty or just '#', redirect to 404
+        const isAr = window.location.pathname.includes('-ar') || window.location.pathname.startsWith('/ar');
+        const errorPath = isAr ? '/404-ar' : '/404';
+        if (this.navigate) {
+          this.navigate(errorPath);
+        } else {
+          window.location.href = errorPath;
+        }
+        return;
+      }
+      
+      if (href.startsWith('http')) {
+        window.open(href, '_blank');
+      } else if (href.startsWith('#')) {
         // Handle hash links - scroll to element
-        const hash = closestMedia.href.substring(1);
+        const hash = href.substring(1);
         const element = document.getElementById(hash) || document.querySelector(`[id="${hash}"]`);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          window.location.hash = closestMedia.href;
+          // If hash element doesn't exist, redirect to 404
+          const isAr = window.location.pathname.includes('-ar') || window.location.pathname.startsWith('/ar');
+          const errorPath = isAr ? '/404-ar' : '/404';
+          if (this.navigate) {
+            this.navigate(errorPath);
+          } else {
+            window.location.href = errorPath;
+          }
         }
       } else {
+        // List of valid/complete routes
+        const validRoutes = [
+          '/', '/ar',
+          '/home-two', '/home-two-ar',
+          '/about', '/about-ar',
+          '/blogs', '/blogs-ar',
+          '/contact', '/contact-ar',
+          '/category', '/category-ar',
+          '/graphic-design', '/graphic-design-ar',
+          '/app-design', '/app-design-ar',
+          '/web-design', '/web-design-ar',
+          '/3d-design', '/3d-design-ar',
+          '/egy-air', '/egy-air-ar',
+          '/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo',
+          '/404', '/404-ar'
+        ];
+        
+        // Check if the route is valid
+        const isAr = window.location.pathname.includes('-ar') || window.location.pathname.startsWith('/ar');
+        const isValidRoute = validRoutes.includes(href);
+        
+        if (!isValidRoute) {
+          // Route doesn't exist or is not done, redirect to 404
+          const errorPath = isAr ? '/404-ar' : '/404';
+          if (this.navigate) {
+            this.navigate(errorPath);
+          } else {
+            window.location.href = errorPath;
+          }
+          return;
+        }
+        
         // Use React Router navigation if available, otherwise fallback to window.location
         if (this.navigate) {
-          this.navigate(closestMedia.href);
+          this.navigate(href);
         } else {
-          window.location.href = closestMedia.href;
+          window.location.href = href;
         }
       }
     }
@@ -556,9 +740,18 @@ class App {
   }
 
   onWheel(e) {
-    const delta = e.deltaY || e.wheelDelta || e.detail;
-    this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
-    this.onCheckDebounce();
+    // Only respond to horizontal scrolling (deltaX), ignore vertical (deltaY)
+    const deltaX = e.deltaX || 0;
+    const deltaY = Math.abs(e.deltaY || 0);
+    
+    // If there's significant horizontal scroll, use it
+    if (Math.abs(deltaX) > deltaY) {
+      this.scroll.target += (deltaX > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.15;
+      this.onCheckDebounce();
+      // Prevent default to stop page scrolling
+      e.preventDefault();
+    }
+    // If it's primarily vertical scroll, do nothing (let page scroll normally)
   }
 
   onCheck() {

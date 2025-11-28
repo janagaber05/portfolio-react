@@ -29,9 +29,9 @@ export default function CategoryEN() {
               { image: '/imgs/category/app-design-category.png', text: 'App Design', href: '/app-design' },
               { image: '/imgs/category/web-desogn-category.png', text: 'Web Design', href: '/web-design' },
               { image: '/imgs/category/graphic-design-category.png', text: 'Graphic Design', href: '/graphic-design' },
-              { image: '/imgs/category/coding-category.png', text: 'Coding', href: '/#skills' },
+              { image: '/imgs/category/coding-category.png', text: 'Coding', href: '/404' },
               { image: '/imgs/category/blogs-category.png', text: 'Blogs', href: '/blogs' },
-              { image: '/imgs/category/3d-category.png', text: '3D', href: '/3d-design' }
+              { image: '/imgs/category/3d-category.png', text: '3D', href: '/404' }
             ]}
             bend={3}
             textColor="#ffffff"

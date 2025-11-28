@@ -13,14 +13,14 @@ export default function EgyAirEN() {
             <p className="egyair-subtitle">Modern Egyptian Airline Branding</p>
           </div>
           <div className="egyair-hero-image">
-            <img src="/imgs/IMG_4737 2.png" alt="Egy Air purple shopping bag" />
+            <img src="public/imgs/egy-air/egy-air-hero.png" alt="Egy Air purple shopping bag" />
           </div>
         </div>
 
         {/* Project Overview Section */}
         <div className="egyair-section egyair-overview">
           <div className="egyair-overview-image">
-            <img src="/imgs/Frame 37.png" alt="Egy Air brochures" />
+            <img src="public/imgs/egy-air/egy-air1.png" alt="Egy Air brochures" />
           </div>
           <div className="egyair-overview-text">
             <p className="egyair-description">
@@ -35,7 +35,7 @@ export default function EgyAirEN() {
             </ul>
           </div>
           <div className="egyair-overview-image-bottom">
-            <img src="/imgs/Frame 40.png" alt="Egy Air purple box" />
+            <img src="public/imgs/egy-air/egy-air2.png" alt="Egy Air purple box" />
           </div>
         </div>
 
@@ -51,7 +51,7 @@ export default function EgyAirEN() {
             </ul>
           </div>
           <div className="egyair-cultural-image">
-            <img src="/imgs/IMG_4737 2.png" alt="Egy Air white shopping bag" />
+            <img src="public/imgs/egy-air/egy-air-3.png" alt="Egy Air white shopping bag" />
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export default function EgyAirEN() {
             </div>
           </div>
           <div className="egyair-colors-image">
-            <img src="/imgs/Frame 40.png" alt="Egy Air gray version application" />
+            <img src="public/imgs/egy-air/egy-air4.png" alt="Egy Air gray version application" />
           </div>
         </div>
 

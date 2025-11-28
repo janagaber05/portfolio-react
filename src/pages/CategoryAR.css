@@ -3,26 +3,28 @@
 .work-hero .hero-cover-bg::after{content:""; position:absolute; inset:0; background:rgba(13,16,23,0.4)}
 .work-hero__content{
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:space-between;
+  justify-content:center;
   gap:48px;
   width:100%;
   position:relative;
   z-index:2;
+  text-align:center;
 }
 [dir="rtl"] .work-hero__content{
-  flex-direction:row-reverse;
+  flex-direction:column;
 }
 .work-hero__text{
-  flex:1;
-  max-width:600px;
+  width:100%;
+  max-width:800px;
 }
 .work-hero__image{
-  flex:1;
   display:flex;
   justify-content:center;
   align-items:center;
   max-width:500px;
+  width:100%;
 }
 .work-hero__image img{
   width:100%;

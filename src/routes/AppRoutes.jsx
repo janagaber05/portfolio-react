@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import HomeOneEN from '../pages/HomeOneEN';
 import HomeOneAR from '../pages/HomeOneAR';
 import HomeTwoEN from '../pages/HomeTwoEN';
@@ -24,6 +24,42 @@ import EgyAirAR from '../pages/EgyAirAR';
 import BlogDetailEmotionEN from '../pages/BlogDetailEmotionEN';
 import NotFoundEN from '../pages/NotFoundEN';
 import NotFoundAR from '../pages/NotFoundAR';
+
+// List of valid/complete routes
+const VALID_ROUTES = [
+  '/',
+  '/ar',
+  '/home-two',
+  '/home-two-ar',
+  '/about',
+  '/about-ar',
+  '/blogs',
+  '/blogs-ar',
+  '/contact',
+  '/contact-ar',
+  '/category',
+  '/category-ar',
+  '/graphic-design',
+  '/graphic-design-ar',
+  '/app-design',
+  '/app-design-ar',
+  '/web-design',
+  '/web-design-ar',
+  '/3d-design',
+  '/3d-design-ar',
+  '/egy-air',
+  '/egy-air-ar',
+  '/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo',
+  '/404',
+  '/404-ar'
+];
+
+// Component to handle 404 redirects based on language
+function NotFoundRedirect() {
+  const location = useLocation();
+  const isAr = location.pathname.includes('-ar') || location.pathname.startsWith('/ar');
+  return isAr ? <NotFoundAR /> : <NotFoundEN />;
+}
 
 export default function AppRoutes() {
   return (
@@ -53,7 +89,7 @@ export default function AppRoutes() {
       <Route path="/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo" element={<BlogDetailEmotionEN />} />
       <Route path="/404" element={<NotFoundEN />} />
       <Route path="/404-ar" element={<NotFoundAR />} />
-      <Route path="*" element={<NotFoundEN />} />
+      <Route path="*" element={<NotFoundRedirect />} />
     </Routes>
   );
 }

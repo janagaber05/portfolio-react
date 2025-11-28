@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Layout from '../components/Layout';
@@ -46,7 +47,7 @@ export default function GraphicDesignAR() {
           <a className="btn" href="/ar#contact">تواصلي معي</a>
         </div>
         <div className="hero-media">
-          <img src="/imgs/Frame 41.png" alt="حاسوب بمشاريع" />
+          <img src="/imgs/graphic-desgin/hero-img.png" alt="حاسوب بمشاريع" />
         </div>
       </section>
 
@@ -55,26 +56,28 @@ export default function GraphicDesignAR() {
         <div className="work-list">
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 37.png" alt="Sandy Skin" />
+              <img src="/imgs/graphic-desgin/sandy-poject.png" alt="Sandy Skin" />
             </div>
             <div className="work-body">
               <h4>ساندي سكين — تصميم مجلد</h4>
               <p>مجلد أنيق لعلامة عناية بالبشرة بألوان وردية وسوداء تعكس الأناقة والثقة.</p>
             </div>
           </article>
-          <article className="work-item">
-            <div className="work-media">
-              <img src="/imgs/IMG_4737 2.png" alt="EGY Air Bag" />
-            </div>
-            <div className="work-body">
-              <h4>إيجي إير — تصميم حقيبة هدايا</h4>
-              <p>هوية عصرية تجمع البنفسجي والأبيض لإحساس بالثقة والحداثة.</p>
-              <a className="btn view-more btn-right" href="/egy-air-ar">عرض المشروع</a>
-            </div>
+          <article className="work-item work-item-clickable">
+            <Link to="/egy-air-ar" className="work-item-link">
+              <div className="work-media">
+                <img src="/imgs/graphic-desgin/egy-air-project.png" alt="EGY Air Bag" />
+              </div>
+              <div className="work-body">
+                <h4>إيجي إير — تصميم حقيبة هدايا</h4>
+                <p>هوية عصرية تجمع البنفسجي والأبيض لإحساس بالثقة والحداثة.</p>
+                <span className="btn view-more btn-right">عرض المشروع</span>
+              </div>
+            </Link>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 40.png" alt="Sonic Colors UI" />
+              <img src="/imgs/graphic-desgin/sonic-game.png" alt="Sonic Colors UI" />
             </div>
             <div className="work-body">
               <h4>سونيك كولورز — إعادة تصميم الإعدادات</h4>
@@ -98,7 +101,7 @@ export default function GraphicDesignAR() {
           <h3 className="section-label">نصائح يجب أن يعرفها كل <span className="accent">مصمم جرافيك</span></h3>
           <div className="tip-card-wrapper">
             <TiltedCard
-              imageSrc="/imgs/Frame 37.png"
+              imageSrc="/imgs/graphic-desgin/tips-img.png"
               altText="صممي بهدف"
               captionText=""
               containerHeight="200px"
@@ -164,11 +167,11 @@ export default function GraphicDesignAR() {
           </div>
         </div>
         <div className="tips-media">
-          <img src="/imgs/Frame 42.png" alt="مكتب نيون" />
+          <img src="/imgs/graphic-desgin/tips-img.png" alt="مكتب نيون" />
         </div>
       </section>
 
-      <section className="cta-band" aria-label="لنعمل معاً" style={{ backgroundImage: "url('/imgs/us working together.png')" }}>
+      <section className="cta-band" aria-label="لنعمل معاً" style={{backgroundImage:"url('/imgs/us working together.png')"}}>
         <div className="container centered">
           <p className="muted">تعرفي ما الذي ينقص</p>
           <h3 className="section-title centered">أن نعمل معاً</h3>
@@ -178,5 +181,3 @@ export default function GraphicDesignAR() {
     </Layout>
   );
 }
-
-

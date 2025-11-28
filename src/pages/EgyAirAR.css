@@ -50,7 +50,9 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Egy Air Overview Section */
@@ -71,7 +73,9 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .egyair-overview-text {
@@ -133,7 +137,9 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Egy Air Cultural Message Section */

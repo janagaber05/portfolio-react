@@ -3,11 +3,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Layout from '../components/Layout';
 import TiltedCard from '../components/TiltedCard';
-import './GraphicDesignEN.css';
+import './WebDesignEN.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function GraphicDesignEN() {
+export default function WebDesignEN() {
   const tipsRef = useRef(null);
 
   useEffect(() => {
@@ -40,13 +40,13 @@ export default function GraphicDesignEN() {
 
   return (
     <Layout lang="en">
-      <section className="hero-split container" aria-label="Graphic Design hero">
+      <section className="hero-split container" aria-label="Web Design hero">
         <div className="hero-content">
-          <h1 className="hero-title">Graphic<br/>Design</h1>
-          <a className="btn" href="/#contact">Contact me</a>
+          <h1 className="hero-title">Web<br/>Design</h1>
+          <a className="btn" href="/contact">Contact me</a>
         </div>
         <div className="hero-media">
-          <img src="/imgs/Frame 41.png" alt="Neon laptop with project cards" />
+          <img src="/imgs/Frame 41.png" alt="3D laptop with web interface" />
         </div>
       </section>
 
@@ -55,51 +55,50 @@ export default function GraphicDesignEN() {
         <div className="work-list">
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 37.png" alt="Sandy Skin folder mockup" />
+              <img src="/imgs/Frame 37.png" alt="E-commerce website mockup" />
             </div>
             <div className="work-body">
-              <h4>Sandy Skin – Folder Design</h4>
-              <p>A sleek folder for a skincare brand using soft pink and black to express elegance and confidence. I chose this mockup to highlight the brand’s professional and luxurious feel in a real-life context.</p>
+              <h4>Modern E-Commerce Platform</h4>
+              <p>A sleek and user-friendly e-commerce website designed to provide seamless shopping experiences. The design focuses on intuitive navigation, clear product presentation, and smooth checkout processes that convert visitors into customers.</p>
             </div>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/IMG_4737 2.png" alt="EGY Air bag mockup" />
+              <img src="/imgs/IMG_4737 2.png" alt="Portfolio website mockup" />
             </div>
             <div className="work-body">
-              <h4>EGY Air – Gift Bag Design</h4>
-              <p>A branded bag for an airline, combining purple and white for a modern, trustworthy look. The bag mockup was chosen to show how the brand identity translates into physical materials and customer experience.</p>
-              <a className="btn view-more btn-right" href="/egy-air">View Project</a>
+              <h4>Creative Portfolio Website</h4>
+              <p>An elegant portfolio website showcasing creative work with stunning visuals and smooth animations. The design emphasizes the work itself while providing an engaging and memorable browsing experience for visitors.</p>
             </div>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 40.png" alt="Sonic Colors settings redesign" />
+              <img src="/imgs/Frame 40.png" alt="Corporate website mockup" />
             </div>
             <div className="work-body">
-              <h4>Sonic Colors Ultimate – Game Settings Rebrand</h4>
-              <p>A redesigned settings screen for the Sonic Colors Ultimate game with vibrant neon elements. I used a laptop mockup to display how the new UI looks in an actual digital environment.</p>
+              <h4>Corporate Business Website</h4>
+              <p>A professional corporate website that builds trust and credibility. The design combines modern aesthetics with functional layouts, ensuring that important information is easily accessible and the brand message is clearly communicated.</p>
               <a className="btn view-more btn-right" href="#more">View More</a>
             </div>
           </article>
         </div>
         <div id="more-projects" className="work-more hidden">
-          <article className="work-box b1"><span className="box-title">Poster Series</span></article>
-          <article className="work-box b2"><span className="box-title">Brand Kit</span></article>
-          <article className="work-box b3"><span className="box-title">Social Cards</span></article>
+          <article className="work-box b1"><span className="box-title">Landing Pages</span></article>
+          <article className="work-box b2"><span className="box-title">Web Apps</span></article>
+          <article className="work-box b3"><span className="box-title">Responsive Sites</span></article>
         </div>
         <div className="actions-right">
           <a className="btn view-less hidden" href="#less">View Less</a>
         </div>
       </section>
 
-      <section ref={tipsRef} className="tips-grid container" id="tips" aria-label="Tips for designers">
+      <section ref={tipsRef} className="tips-grid container" id="tips" aria-label="Tips for web designers">
         <div className="tips-left">
-          <h3 className="section-label">tips each <span className="accent">Graphic Designer</span> should know</h3>
+          <h3 className="section-label">tips each <span className="accent">Web Designer</span> should know</h3>
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/Frame 37.png"
-              altText="Design with Purpose"
+              altText="Mobile First Design"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -112,8 +111,8 @@ export default function GraphicDesignEN() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>Design with Purpose, Not Just Aesthetics</h5>
-                  <p>Every visual element in your design should have a reason to exist, nothing is random. Whether it's color, typography, or spacing, each decision should support the message or emotion you're trying to convey.</p>
+                  <h5>Design Mobile First</h5>
+                  <p>Start with mobile devices in mind. Mobile-first design ensures your website works perfectly on smaller screens and scales beautifully to larger ones, providing the best experience for all users.</p>
                 </div>
               }
             />
@@ -121,7 +120,7 @@ export default function GraphicDesignEN() {
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/IMG_4737 2.png"
-              altText="Master Typography"
+              altText="Fast Loading"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -134,8 +133,8 @@ export default function GraphicDesignEN() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>Master Typography: It's Half the Design</h5>
-                  <p>Typography isn't just about choosing pretty fonts; it's about hierarchy, readability, and emotion. The right typography can completely transform how a design is perceived.</p>
+                  <h5>Speed Matters More Than Ever</h5>
+                  <p>Fast loading times are crucial for user experience and SEO. Optimize images, minimize code, and prioritize performance. Users expect instant results, and search engines reward fast sites.</p>
                 </div>
               }
             />
@@ -143,7 +142,7 @@ export default function GraphicDesignEN() {
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/Frame 40.png"
-              altText="Think Like a Brand"
+              altText="Clear Navigation"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -156,15 +155,15 @@ export default function GraphicDesignEN() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>Think Like a Brand, Not a Designer</h5>
-                  <p>Consistency and focus across visuals build strong brand recognition. Design choices should reflect the brand's voice and goals, which makes the whole identity bigger and more effective.</p>
+                  <h5>Navigation Should Be Intuitive</h5>
+                  <p>Users should never have to guess where to find information. Clear navigation, logical page structure, and consistent placement of elements help users find what they need quickly and easily.</p>
                 </div>
               }
             />
           </div>
         </div>
         <div className="tips-media">
-          <img src="/imgs/Frame 42.png" alt="Neon desk with sticky notes" />
+          <img src="/imgs/Frame 42.png" alt="Modern desk setup with laptop and UI elements" />
         </div>
       </section>
 
@@ -172,11 +171,10 @@ export default function GraphicDesignEN() {
         <div className="container centered">
           <p className="muted">Do you know what's Missing</p>
           <h3 className="section-title centered">Us Working Together</h3>
-          <a className="btn" href="/#contact">Contact me</a>
+          <a className="btn" href="/contact">Contact me</a>
         </div>
       </section>
     </Layout>
   );
 }
-
 

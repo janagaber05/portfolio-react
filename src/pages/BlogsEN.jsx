@@ -1,5 +1,6 @@
 import Layout from '../components/Layout';
 import TiltedCard from '../components/TiltedCard';
+import LiquidEther from '../components/LiquidEther';
 import { Link } from 'react-router-dom';
 import './BlogsEN.css';
 
@@ -55,6 +56,25 @@ export default function BlogsEN() {
   return (
     <Layout lang="en">
       <div className="blogs-page">
+        <div className="blogs-page__bg" aria-hidden="true">
+          <LiquidEther
+            colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#0D1017' ]}
+            mouseForce={16}
+            cursorSize={120}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={32}
+            iterationsPoisson={32}
+            resolution={0.6}
+            isBounce={false}
+            autoDemo
+            autoSpeed={0.45}
+            autoIntensity={2}
+            takeoverDuration={0.25}
+            autoResumeDelay={2500}
+            autoRampDuration={0.5}
+          />
+        </div>
         <div className="blogs-page__content">
           <section className="container blogs-hero" aria-label="Blogs hero">
             <div className="blogs-hero__text">

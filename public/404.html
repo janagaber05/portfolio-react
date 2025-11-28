@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page Not Found</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Kufam", "Segoe UI", system-ui, -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top, #2b1055, #09030f);
+        color: #fff;
+        padding: 24px;
+        text-align: center;
+      }
+      main {
+        max-width: 480px;
+      }
+      h1 {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        margin-bottom: 0.5rem;
+      }
+      p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.85rem 1.75rem;
+        border-radius: 999px;
+        text-decoration: none;
+        background: linear-gradient(120deg, #a855f7, #ec4899);
+        color: #fff;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.35);
+      }
+      a:hover {
+        transform: translateY(-2px) scale(1.01);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>404 — Lost in the clouds</h1>
+      <p>
+        The page you’re looking for doesn’t exist. Let’s take you back to the
+        portfolio home so you can keep exploring Jana’s work.
+      </p>
+      <a href="/">Return Home</a>
+    </main>
+  </body>
+</html>
+

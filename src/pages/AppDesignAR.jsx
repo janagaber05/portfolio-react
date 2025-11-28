@@ -3,11 +3,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Layout from '../components/Layout';
 import TiltedCard from '../components/TiltedCard';
-import './GraphicDesignAR.css';
+import './AppDesignAR.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function GraphicDesignAR() {
+export default function AppDesignAR() {
   const tipsRef = useRef(null);
 
   useEffect(() => {
@@ -40,13 +40,13 @@ export default function GraphicDesignAR() {
 
   return (
     <Layout lang="ar">
-      <section className="hero-split container" aria-label="بطل تصميم الجرافيك">
+      <section className="hero-split container" aria-label="بطل تصميم التطبيقات">
         <div className="hero-content">
-          <h1 className="hero-title">تصميم<br/>جرافيك</h1>
-          <a className="btn" href="/ar#contact">تواصلي معي</a>
+          <h1 className="hero-title">تصميم<br/>تطبيقات</h1>
+          <a className="btn" href="/contact-ar">تواصلي معي</a>
         </div>
         <div className="hero-media">
-          <img src="/imgs/Frame 41.png" alt="حاسوب بمشاريع" />
+          <img src="/imgs/Frame 41.png" alt="هاتف ذكي ثلاثي الأبعاد بواجهة تطبيق" />
         </div>
       </section>
 
@@ -55,51 +55,50 @@ export default function GraphicDesignAR() {
         <div className="work-list">
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 37.png" alt="Sandy Skin" />
+              <img src="/imgs/Frame 37.png" alt="تطبيق Easy Eat" />
             </div>
             <div className="work-body">
-              <h4>ساندي سكين — تصميم مجلد</h4>
-              <p>مجلد أنيق لعلامة عناية بالبشرة بألوان وردية وسوداء تعكس الأناقة والثقة.</p>
+              <h4>Easy Eat — الطبخ أصبح سهلاً</h4>
+              <p>Easy Eat هو تطبيق طبخ ذكي مصمم لجعل وقتك في المطبخ أبسط وأكثر متعة. يساعد المستخدمين على اكتشاف الوصفات وتنظيم المكونات واتباع التعليمات خطوة بخطوة بسهولة — مما يحول كل وجبة إلى تجربة سلسة وخالية من التوتر.</p>
             </div>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/IMG_4737 2.png" alt="EGY Air Bag" />
+              <img src="/imgs/IMG_4737 2.png" alt="تطبيق Evento" />
             </div>
             <div className="work-body">
-              <h4>إيجي إير — تصميم حقيبة هدايا</h4>
-              <p>هوية عصرية تجمع البنفسجي والأبيض لإحساس بالثقة والحداثة.</p>
-              <a className="btn view-more btn-right" href="/egy-air-ar">عرض المشروع</a>
+              <h4>Evento — ابحثي عن اللحظة المناسبة لك</h4>
+              <p>Evento يبسط اكتشاف الفعاليات من خلال التوصيات الذكية والحجز السلس. سواء كانت موسيقى أو فن أو مغامرة، يساعدك على التخطيط لرحلتك المثالية ببضع نقرات فقط.</p>
             </div>
           </article>
           <article className="work-item">
             <div className="work-media">
-              <img src="/imgs/Frame 40.png" alt="Sonic Colors UI" />
+              <img src="/imgs/Frame 40.png" alt="تطبيق Escape It" />
             </div>
             <div className="work-body">
-              <h4>سونيك كولورز — إعادة تصميم الإعدادات</h4>
-              <p>واجهة نابضة وعناصر نيون لعرض الشكل داخل بيئة رقمية فعلية.</p>
+              <h4>Escape It — الواقع له لمسة خاصة</h4>
+              <p>Escape It هي لعبة غرفة هروب بالواقع المعزز تم إنشاؤها بالتعاون مع جيلان حمد. يحول التطبيق أي مساحة إلى تجربة تفاعلية مثيرة، حيث يحل اللاعبون الألغاز ويكتشفون الأدلة المخفية ويتسابقون مع الوقت — مما يدمج الإبداع والتكنولوجيا والخيال في عالم واحد غامر.</p>
               <a className="btn view-more btn-right" href="#more">عرض المزيد</a>
             </div>
           </article>
         </div>
         <div id="more-projects" className="work-more hidden">
-          <article className="work-box b1"><span className="box-title">سلسلة بوسترات</span></article>
-          <article className="work-box b2"><span className="box-title">عدة براند</span></article>
-          <article className="work-box b3"><span className="box-title">بطاقات سوشيال</span></article>
+          <article className="work-box b1"><span className="box-title">تطبيقات موبايل</span></article>
+          <article className="work-box b2"><span className="box-title">تصميم واجهة المستخدم</span></article>
+          <article className="work-box b3"><span className="box-title">نماذج أولية</span></article>
         </div>
         <div className="actions-right">
           <a className="btn view-less hidden" href="#less">عرض أقل</a>
         </div>
       </section>
 
-      <section ref={tipsRef} className="tips-grid container" id="tips" aria-label="نصائح للمصممين">
+      <section ref={tipsRef} className="tips-grid container" id="tips" aria-label="نصائح لمصممي التطبيقات">
         <div className="tips-left">
-          <h3 className="section-label">نصائح يجب أن يعرفها كل <span className="accent">مصمم جرافيك</span></h3>
+          <h3 className="section-label">نصائح يجب أن يعرفها كل <span className="accent">مصمم تطبيقات</span></h3>
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/Frame 37.png"
-              altText="صممي بهدف"
+              altText="صممي للمستخدم"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -112,8 +111,8 @@ export default function GraphicDesignAR() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>صممي بهدف وليس للزينة</h5>
-                  <p>لكل عنصر بصري سبب وجود يدعم الرسالة أو الشعور المطلوب. سواء كان اللون أو الخط أو المسافات، كل قرار يجب أن يدعم الرسالة أو المشاعر التي تحاولين نقلها.</p>
+                  <h5>صممي للمستخدم وليس لنفسك</h5>
+                  <p>ابدئي دائماً بفهم مستخدميك — أهدافهم وإحباطاتهم وعاداتهم. كل لون وزر واختيار تخطيط يجب أن يجعل رحلتهم أسهل، وليس فقط أن يبدو جميلاً.</p>
                 </div>
               }
             />
@@ -121,7 +120,7 @@ export default function GraphicDesignAR() {
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/IMG_4737 2.png"
-              altText="أتقني الخطوط"
+              altText="اجعليه بسيطاً"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -134,8 +133,8 @@ export default function GraphicDesignAR() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>أتقني الخطوط — نصف التصميم</h5>
-                  <p>الخطوط ليست مجرد اختيار خطوط جميلة؛ بل عن التدرج الهرمي والقرائية والمشاعر. الخطوط الصحيحة يمكن أن تحول تماماً كيفية إدراك التصميم.</p>
+                  <h5>اجعليه بسيطاً وبديهياً</h5>
+                  <p>أفضل التصاميم تشعر بالطبيعية. تجنبي الفوضى، استخدمي التنقل الواضح، وتأكدي من أن المستخدمين لا يحتاجون للتفكير كثيراً لمعرفة ما يجب فعله بعد ذلك.</p>
                 </div>
               }
             />
@@ -143,7 +142,7 @@ export default function GraphicDesignAR() {
           <div className="tip-card-wrapper">
             <TiltedCard
               imageSrc="/imgs/Frame 40.png"
-              altText="فكري كعلامة"
+              altText="أولوي الاتساق"
               captionText=""
               containerHeight="200px"
               containerWidth="100%"
@@ -156,15 +155,15 @@ export default function GraphicDesignAR() {
               displayOverlayContent={true}
               overlayContent={
                 <div className="tip-card-overlay-content">
-                  <h5>فكري كعلامة وليس كمصمم فقط</h5>
-                  <p>الاتساق والتركيز عبر العناصر البصرية يبني هوية قوية. قرارات التصميم يجب أن تعكس صوت العلامة وأهدافها، مما يجعل الهوية كاملة وأكثر فعالية.</p>
+                  <h5>أولوي الاتساق</h5>
+                  <p>استخدمي خطوطاً وألواناً وأيقونات ومسافات متسقة عبر جميع الشاشات. الاتساق يبني الثقة ويساعد المستخدمين على الشعور بالألفة مع تطبيقك.</p>
                 </div>
               }
             />
           </div>
         </div>
         <div className="tips-media">
-          <img src="/imgs/Frame 42.png" alt="مكتب نيون" />
+          <img src="/imgs/Frame 42.png" alt="مكتب حديث مع لوح و عناصر واجهة المستخدم" />
         </div>
       </section>
 
@@ -172,11 +171,10 @@ export default function GraphicDesignAR() {
         <div className="container centered">
           <p className="muted">تعرفي ما الذي ينقص</p>
           <h3 className="section-title centered">أن نعمل معاً</h3>
-          <a className="btn" href="/ar#contact">تواصلي معي</a>
+          <a className="btn" href="/contact-ar">تواصلي معي</a>
         </div>
       </section>
     </Layout>
   );
 }
-
 

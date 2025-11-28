@@ -1,0 +1,542 @@
+/* Egy Air Project Showcase */
+.egyair-project {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  direction: rtl;
+}
+
+/* Egy Air Hero Section */
+.egyair-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 80px 0;
+  min-height: 60vh;
+  flex-direction: row-reverse;
+}
+
+.egyair-hero-content {
+  flex: 1 1 50%;
+  text-align: right;
+}
+
+.egyair-title {
+  color: #ff6ec7;
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.egyair-subtitle {
+  color: #f6ecff;
+  font-size: clamp(18px, 2.5vw, 24px);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.egyair-hero-image {
+  flex: 1 1 50%;
+  max-width: 500px;
+}
+
+.egyair-hero-image img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  display: block;
+}
+
+/* Egy Air Overview Section */
+.egyair-overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 80px 0;
+}
+
+.egyair-overview-image {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.egyair-overview-image img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  display: block;
+}
+
+.egyair-overview-text {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+
+.egyair-description {
+  color: #f6ecff;
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.egyair-overview-bullets {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 40px;
+  text-align: right;
+}
+
+.egyair-overview-bullets ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.egyair-overview-bullets li {
+  color: #f6ecff;
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  padding-right: 24px;
+  padding-left: 0;
+  position: relative;
+}
+
+.egyair-overview-bullets li::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  left: auto;
+  color: #ff6ec7;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.egyair-overview-image-bottom {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: 40px;
+}
+
+.egyair-overview-image-bottom img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  display: block;
+}
+
+/* Egy Air Cultural Message Section */
+.egyair-cultural {
+  background: rgba(255, 110, 199, 0.15);
+  padding: 80px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  border-radius: 24px;
+  margin: 40px 0;
+}
+
+.egyair-cultural-text {
+  grid-column: 2;
+  text-align: right;
+}
+
+.egyair-section-title {
+  color: #ff6ec7;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  margin: 0 0 24px;
+  line-height: 1.2;
+}
+
+.egyair-cultural-text .egyair-description {
+  margin-bottom: 24px;
+}
+
+.egyair-cultural-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.egyair-cultural-text li {
+  color: #f6ecff;
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding-right: 24px;
+  padding-left: 0;
+  position: relative;
+}
+
+.egyair-cultural-text li::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  left: auto;
+  color: #ff6ec7;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.egyair-cultural-image {
+  grid-column: 1;
+}
+
+.egyair-cultural-image img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  display: block;
+}
+
+/* Egy Air Color Choice Section */
+.egyair-colors {
+  padding: 80px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.egyair-colors-content {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.egyair-color-item {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+}
+
+.egyair-color-swatch {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.egyair-color-swatch.purple {
+  background: #9333ea;
+}
+
+.egyair-color-swatch.gray {
+  background: #6b7280;
+}
+
+.egyair-color-text {
+  flex: 1;
+  text-align: right;
+}
+
+.egyair-color-title {
+  color: #ff6ec7;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.egyair-color-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.egyair-color-text li {
+  color: #f6ecff;
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  padding-right: 24px;
+  padding-left: 0;
+  position: relative;
+}
+
+.egyair-color-text li::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  left: auto;
+  color: #ff6ec7;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.egyair-colors-image {
+  grid-column: 1;
+}
+
+.egyair-colors-image img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  display: block;
+}
+
+/* Egy Air Why This Works Section */
+.egyair-why {
+  background: rgba(255, 110, 199, 0.15);
+  padding: 80px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  border-radius: 24px;
+  margin: 40px 0;
+}
+
+.egyair-why-text {
+  grid-column: 2;
+  text-align: right;
+}
+
+.egyair-why-text .egyair-description {
+  margin-bottom: 24px;
+}
+
+.egyair-why-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.egyair-why-text li {
+  color: #f6ecff;
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding-right: 24px;
+  padding-left: 0;
+  position: relative;
+}
+
+.egyair-why-text li::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  left: auto;
+  color: #ff6ec7;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.egyair-why-image {
+  grid-column: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.egyair-why-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+}
+
+/* Responsive Styles for Egy Air Project */
+@media (max-width: 1100px) {
+  .egyair-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 0;
+  }
+
+  .egyair-hero-content {
+    order: 1;
+    text-align: center;
+  }
+
+  .egyair-hero-image {
+    order: 2;
+    max-width: 100%;
+  }
+
+  .egyair-overview {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .egyair-overview-image {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .egyair-overview-text {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: right;
+  }
+
+  .egyair-overview-bullets {
+    grid-column: 1;
+    grid-row: 3;
+    text-align: right;
+  }
+
+  .egyair-overview-image-bottom {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .egyair-cultural {
+    grid-template-columns: 1fr;
+    padding: 60px 32px;
+  }
+
+  .egyair-cultural-text {
+    grid-column: 1;
+    order: 1;
+    text-align: right;
+  }
+
+  .egyair-cultural-image {
+    grid-column: 1;
+    order: 2;
+  }
+
+  .egyair-colors {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .egyair-colors-content {
+    grid-column: 1;
+    order: 1;
+  }
+
+  .egyair-colors-image {
+    grid-column: 1;
+    order: 2;
+  }
+
+  .egyair-why {
+    grid-template-columns: 1fr;
+    padding: 60px 32px;
+  }
+
+  .egyair-why-text {
+    grid-column: 1;
+    order: 1;
+    text-align: right;
+  }
+
+  .egyair-why-image {
+    grid-column: 1;
+    order: 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .egyair-project {
+    padding: 0 16px;
+  }
+
+  .egyair-hero {
+    padding: 40px 0;
+  }
+
+  .egyair-overview {
+    padding: 40px 0;
+    gap: 24px;
+  }
+
+  .egyair-overview-bullets {
+    margin-top: 24px;
+  }
+
+  .egyair-overview-image-bottom {
+    margin-top: 24px;
+  }
+
+  .egyair-cultural {
+    padding: 40px 24px;
+    gap: 32px;
+  }
+
+  .egyair-colors {
+    padding: 40px 0;
+    gap: 32px;
+  }
+
+  .egyair-color-item {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .egyair-color-swatch {
+    width: 60px;
+    height: 60px;
+  }
+
+  .egyair-why {
+    padding: 40px 24px;
+    gap: 32px;
+  }
+}
+
+/* Egy Air Gallery Section */
+.egyair-gallery {
+  padding: 80px 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  direction: rtl;
+}
+
+.egyair-gallery .egyair-section-title {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.egyair-gallery-container {
+  width: 100%;
+  min-height: 600px;
+  position: relative;
+}
+
+@media (max-width: 1100px) {
+  .egyair-gallery {
+    padding: 60px 20px;
+  }
+
+  .egyair-gallery .egyair-section-title {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 720px) {
+  .egyair-gallery {
+    padding: 40px 16px;
+  }
+
+  .egyair-gallery .egyair-section-title {
+    margin-bottom: 32px;
+    font-size: clamp(28px, 5vw, 40px);
+  }
+
+  .egyair-gallery-container {
+    min-height: 400px;
+  }
+}
+

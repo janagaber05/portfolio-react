@@ -1,58 +1,38 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import TiltedCard from '../components/TiltedCard';
 import LiquidEther from '../components/LiquidEther';
 import { Link } from 'react-router-dom';
+import { getAllBlogs } from '../lib/api/blogs';
 import './BlogsEN.css';
 
-const RECENT_POSTS = [
-  {
-    title: 'Designing with Emotion: How Colors Shape User Experience',
-    href: '/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo',
-    image: '/imgs/blog page/recentblog1.png',
-    alt: 'desk setup',
-    caption: 'Designing with Emotion'
-  },
-  {
-    title: 'From Idea to Interface: My Process in App Design',
-    href: '#',
-    image: '/imgs/blog page/recentblog2.png',
-    alt: 'neon ui',
-    caption: 'App Design Process'
-  },
-  {
-    title: 'The Art of Balance: Managing Creativity and Consistency in Design',
-    href: '#',
-    image: '/imgs/blog page/recentblog3.png',
-    alt: 'balance concept',
-    caption: 'Balance & Consistency'
-  },
-];
-
-const PAST_POSTS = [
-  {
-    title: 'Case Study: Branding a Lifestyle App',
-    image: '/imgs/blog page/pastblogs1.jpg',
-    alt: 'case studies',
-    excerpt:
-      'A behind-the-scenes look at crafting a vivid lifestyle identity, from concept moodboards to launch assets.',
-  },
-  {
-    title: 'Collaborating with Developers for Seamless UI',
-    image: '/imgs/blog page/pastblogs2.jpg',
-    alt: 'collaboration',
-    excerpt:
-      'Hand-off tips, component libraries and communication rituals that keep designers and developers in flow.',
-  },
-  {
-    title: 'Microinteractions & Motion in UX',
-    image: '/imgs/blog page/pastblogs3.jpg',
-    alt: 'motion',
-    excerpt:
-      'Why motion matters, with practical animation guidelines and Figma-to-After Effects workflows I rely on.',
-  },
-];
-
 export default function BlogsEN() {
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function getAllBlogsAPI() {
+      setLoading(true);
+      setError(null);
+      const { data, error: fetchError } = await getAllBlogs();
+      
+      if (fetchError) {
+        console.error('Error fetching blogs:', fetchError);
+        setError(fetchError);
+        setBlogPosts([]);
+      } else {
+        setBlogPosts(data || []);
+      }
+      setLoading(false);
+    }
+    
+    getAllBlogsAPI();
+  }, []);
+
+  // Separate recent and past posts
+  const recentPosts = blogPosts.slice(0, 3);
+  const pastPosts = blogPosts.slice(3);
   return (
     <Layout lang="en">
       <div className="blogs-page">
@@ -118,37 +98,43 @@ export default function BlogsEN() {
             </div>
 
             <div className="blogs-grid">
-              {RECENT_POSTS.map(post => (
-                <article key={post.title} className="blog-card">
-                  <div className="blog-card__media">
-                    <TiltedCard
-                      imageSrc={post.image}
-                      altText={post.alt}
-                      captionText={post.caption}
-                      containerHeight="260px"
-                      containerWidth="100%"
-                      imageHeight="260px"
-                      imageWidth="100%"
-                      rotateAmplitude={12}
-                      scaleOnHover={1.12}
-                      showMobileWarning={false}
-                      showTooltip={false}
-                      displayOverlayContent={false}
-                    />
-                  </div>
-                  <h4 className="blog-card__title">
-                    <Link className="blog-card__link" to={post.href}>
-                      {post.title}
-                    </Link>
-                  </h4>
-                  <p className="blog-card__excerpt">{post.excerpt}</p>
-                  <div className="blog-card__actions">
-                    <Link className="pill" to={post.href}>
-                      Read Blog
-                    </Link>
-                  </div>
-                </article>
-              ))}
+              {loading ? (
+                <div>Loading...</div>
+              ) : recentPosts.length > 0 ? (
+                recentPosts.map(post => (
+                  <article key={post.id} className="blog-card">
+                    <div className="blog-card__media">
+                      <TiltedCard
+                        imageSrc={post.featured_image}
+                        altText={post.title_en}
+                        captionText={post.title_en}
+                        containerHeight="260px"
+                        containerWidth="100%"
+                        imageHeight="260px"
+                        imageWidth="100%"
+                        rotateAmplitude={12}
+                        scaleOnHover={1.12}
+                        showMobileWarning={false}
+                        showTooltip={false}
+                        displayOverlayContent={false}
+                      />
+                    </div>
+                    <h4 className="blog-card__title">
+                      <Link className="blog-card__link" to={`/blog/${post.slug}`}>
+                        {post.title_en}
+                      </Link>
+                    </h4>
+                    <p className="blog-card__excerpt">{post.excerpt_en}</p>
+                    <div className="blog-card__actions">
+                      <Link className="pill" to={`/blog/${post.slug}`}>
+                        Read Blog
+                      </Link>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div>No blog posts found</div>
+              )}
             </div>
           </section>
 
@@ -166,20 +152,26 @@ export default function BlogsEN() {
                 ‹
               </button>
               <div className="blogs-slider__track">
-                {PAST_POSTS.map(post => (
-                  <article key={post.title} className="blog-card blog-card--compact">
-                    <div className="blog-card__media">
-                      <img src={post.image} alt={post.alt} loading="lazy" />
-                    </div>
-                    <h4 className="blog-card__title">{post.title}</h4>
-                    <p className="blog-card__excerpt">{post.excerpt}</p>
-                    <div className="blog-card__actions">
-                      <a className="pill" href="#">
-                        Read Blog
-                      </a>
-                    </div>
-                  </article>
-                ))}
+                {loading ? (
+                  <div>Loading...</div>
+                ) : pastPosts.length > 0 ? (
+                  pastPosts.map(post => (
+                    <article key={post.id} className="blog-card blog-card--compact">
+                      <div className="blog-card__media">
+                        <img src={post.featured_image} alt={post.title_en} loading="lazy" />
+                      </div>
+                      <h4 className="blog-card__title">{post.title_en}</h4>
+                      <p className="blog-card__excerpt">{post.excerpt_en}</p>
+                      <div className="blog-card__actions">
+                        <Link className="pill" to={`/blog/${post.slug}`}>
+                          Read Blog
+                        </Link>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <div>No past blog posts found</div>
+                )}
               </div>
               <button className="blogs-slider__arrow blogs-slider__arrow--next" type="button" aria-label="Next blog">
                 ›

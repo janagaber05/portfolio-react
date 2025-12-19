@@ -8,6 +8,7 @@ import TiltedCard from '../components/TiltedCard';
 import CurvedLoop from '../components/CurvedLoop';
 import MagicBento from '../components/MagicBento';
 import Footer from '../components/Footer';
+import { supabase } from './Supabase';
 import './HomeTwo.css';
 
 const socialIconSet = [
@@ -113,44 +114,15 @@ export default function HomeTwoEN() {
   const rootRef = useRef(null);
   const startY = useRef(0);
   const [entering, setEntering] = useState(true);
-
-  const strengthCards = [
-    {
-      title: 'Ambitious UX/UI designer',
-      description:
-        'I always think big—building my own studio that brings bold media, digital marketing, content creation and web experiences together under one roof.',
-      background:
-        'linear-gradient(188deg, rgba(193,172,255,0.95), rgba(98,67,199,0.92))',
-    },
-    {
-      title: 'Creative & visionary UX/UI designer',
-      description:
-        'Every project is a canvas. I sweat the micro-details—whether I am shaping a product flow or a brand story—to make sure each touchpoint feels intentional.',
-      background:
-        'linear-gradient(189deg, rgba(186,165,255,0.94), rgba(104,73,200,0.92))',
-    },
-    {
-      title: 'Resilient UX/UI designer',
-      description:
-        'Setbacks fuel my focus. I return to the work with sharper energy, stronger ideas and the dedication to deliver what I promise.',
-      background:
-        'linear-gradient(189deg, rgba(181,158,249,0.94), rgba(99,68,188,0.9))',
-    },
-    {
-      title: 'Dedicated UX/UI designer',
-      description:
-        'When I commit to a project I finish it at 100%. I stay curious, keep learning and bring the latest UX thinking into every launch.',
-      background:
-        'linear-gradient(189deg, rgba(176,150,242,0.94), rgba(92,64,182,0.9))',
-    },
-    {
-      title: 'Independent minded UX/UI designer',
-      description:
-        'I do not copy. I invent. My process is uniquely mine—blending research with fearless experimentation to craft solutions that stand out.',
-      background:
-        'linear-gradient(189deg, rgba(170,142,236,0.94), rgba(86,59,177,0.92))',
-    },
-  ];
+  
+  // API State
+  const [homeContent, setHomeContent] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [experience, setExperience] = useState([]);
+  const [strengthCards, setStrengthCards] = useState([]);
+  const [valuesCards, setValuesCards] = useState([]);
+  const [growingCards, setGrowingCards] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const strengthTransforms = [
     'rotate(5deg) translate(-150px)',
@@ -160,43 +132,114 @@ export default function HomeTwoEN() {
     'rotate(-4deg) translate(150px)',
   ];
 
-  const growingCards = [
-    {
-      color: '#060010',
-      label: '01',
-      title: '01 — What are my Future Goals as a UX/UI Designer?',
-      description:
-        'As a UX/UI designer I’m building my own company specialising in UX/UI design, digital marketing, branding, content creation, and web design. I’m also developing my skills to become a leading creative designer and future entrepreneur recognised in both business and design.',
-    },
-    {
-      color: '#060010',
-      label: '02',
-      title: '02 — What is my Style as a UX/UI Designer?',
-      description:
-        'My style is a mix of simplicity, creativity, and detail. Every design should be clear, modern, and easy to use, while still feeling unique and memorable.',
-    },
-    {
-      color: '#060010',
-      label: '03',
-      title: '03 — What is my Inspiration as a UX/UI Designer?',
-      description:
-        'I take inspiration from everyday life, different industries, and any problem I encounter. Inspiration can come from anything and anywhere—every challenge becomes a gateway to create practical, simple, and creative designs.',
-    },
-    {
-      color: '#060010',
-      label: '04',
-      title: '04 — What is my Edge as a UX/UI Designer?',
-      description:
-        'I combine creative design with business impact. I focus on the customer’s dream and how to bring it to life, while ensuring each design helps the company grow, sell more, and connect better with its audience.',
-    },
-    {
-      color: '#060010',
-      label: '05',
-      title: '05 — What is my Belief as a UX/UI Designer?',
-      description:
-        'I believe UX/UI designers should always solve problems, not just decorate screens. Design is more than colours and layouts; it’s about creating experiences that people trust and enjoy using.',
-    },
-  ];
+  // Fetch data from Supabase
+  useEffect(() => {
+    async function getAllHomeContentAPI() {
+      try {
+        // Try without special character first
+        let res = await supabase.from("home_about_category_content").select("*").eq("section", "home");
+        console.log("HomeTwoEN - First try (without special char):", res);
+        
+        // If that fails, try with special character
+        if (res.error) {
+          console.log("HomeTwoEN - Trying with special character...");
+          res = await supabase.from("homeـ_about_category_content").select("*").eq("section", "home");
+          console.log("HomeTwoEN - Second try (with special char):", res);
+        }
+        
+        if (res.error) {
+          console.error("HomeTwoEN Error:", res.error);
+        }
+        
+        if (res.data) {
+          console.log("HomeTwoEN - Data received:", res.data.length, "items");
+          console.log("HomeTwoEN - Full data:", res.data);
+          console.log("HomeTwoEN - All keys:", res.data.map(item => item.key));
+          setHomeContent(res.data || []);
+          
+          // Parse metadata for cards
+          res.data.forEach(item => {
+            console.log(`📌 HomeTwoEN - Processing item:`);
+            console.log(`   Key: "${item.key}"`);
+            console.log(`   Section: "${item.section}"`);
+            console.log(`   Has content_en: ${item.content_en ? 'YES' : 'NO'}`);
+            if (item.content_en) {
+              console.log(`   content_en preview: ${item.content_en.substring(0, 50)}...`);
+            }
+            if (item.metadata) {
+              try {
+                const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
+                console.log(`Metadata for ${item.key}:`, metadata);
+                
+                if (item.key === 'strengths' && metadata.cards) {
+                  console.log("✅ Setting strength cards:", metadata.cards.length);
+                  setStrengthCards(metadata.cards);
+                }
+                if (item.key === 'values' && metadata.cards) {
+                  console.log("✅ Setting values cards:", metadata.cards.length);
+                  setValuesCards(metadata.cards);
+                }
+                if (item.key === 'growing' && metadata.cards) {
+                  console.log("✅ Setting growing cards:", metadata.cards.length);
+                  setGrowingCards(metadata.cards);
+                }
+              } catch (e) {
+                console.error('Error parsing metadata for', item.key, e);
+              }
+            }
+          });
+        } else {
+          console.warn("HomeTwoEN - No data in response");
+        }
+      } catch (err) {
+        console.error("HomeTwoEN - Exception:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    async function getAllSkillsAPI() {
+      try {
+        const res = await supabase.from("skills").select("*");
+        console.log("Skills:", res);
+        if (res.data) {
+          setSkills(res.data || []);
+        }
+      } catch (err) {
+        console.error("Skills API Error:", err);
+      }
+    }
+    
+    async function getAllExperienceAPI() {
+      try {
+        const res = await supabase.from("experience").select("*");
+        console.log("Experience:", res);
+        if (res.data) {
+          setExperience(res.data || []);
+        }
+      } catch (err) {
+        console.error("Experience API Error:", err);
+      }
+    }
+    
+    getAllHomeContentAPI();
+    getAllSkillsAPI();
+    getAllExperienceAPI();
+  }, []);
+
+  // Helper function to get content by key
+  const getContent = (key) => {
+    const item = homeContent.find(item => item.key === key);
+    if (!item) {
+      console.log(`❌ Content not found for key: "${key}"`);
+      console.log('📋 Available keys in database:', homeContent.map(c => c.key));
+      console.log('📋 Full homeContent array:', homeContent);
+    } else {
+      console.log(`✅ Found content for key: "${key}"`);
+      console.log(`   Content:`, item.content_en ? "HAS CONTENT" : "EMPTY");
+    }
+    return item?.content_en || '';
+  };
 
   useEffect(() => {
     const timeout = setTimeout(() => setEntering(false), 40);
@@ -253,6 +296,8 @@ export default function HomeTwoEN() {
     };
   }, [location.state, navigate]);
 
+  if (loading) return <Layout lang="en" hideFooter><div>Loading...</div></Layout>;
+
   return (
     <Layout lang="en" hideFooter>
       <div className="home-two-page">
@@ -287,11 +332,8 @@ export default function HomeTwoEN() {
                 <img src="/imgs/home page/hero-img.png" alt="Jana Ahmed portrait side profile" />
               </div>
               <div className="home-two__card" role="region" aria-label="Know Me card">
-                <h2>Know Me</h2>
-                <p>I’m a UX/UI Designer that always works on what she loves so she can give 100% results.</p>
-                <p>I work in everything I like, so I always love what I do.</p>
-                <p>I really like creating content and editing videos; I’m very creative in this part.</p>
-                <p>I get ideas and trends from nowhere and bring them to life.</p>
+                <h2>{getContent('know_me_title') || 'Know Me (No data from API)'}</h2>
+                <div dangerouslySetInnerHTML={{ __html: getContent('know_me_description') || '<p>No description from API</p>' }} />
               </div>
             </div>
           </section>
@@ -337,11 +379,8 @@ export default function HomeTwoEN() {
                 />
               </figure>
               <div className="home-two-approach__text">
-                <h3>My Approach as a UX/UI Designer</h3>
-                <p>
-                  Every project starts with listening. I translate business goals into streamlined flows,
-                  unlock opportunities during research and keep the storytelling vibrant until launch.
-                </p>
+                <h3>{getContent('approach_title')}</h3>
+                <div dangerouslySetInnerHTML={{ __html: getContent('approach_description') }} />
               </div>
             </div>
           </section>
@@ -354,64 +393,59 @@ export default function HomeTwoEN() {
                   <p>as a UX/UI designer</p>
                 </div>
                 <div className="home-two-skills__matrix" role="list">
-                  {[
-                    { key: 'ps-1', label: 'PS' },
-                    { key: 'pr', label: 'PR' },
-                    { key: 'an', label: 'AN' },
-                    { key: 'lr', label: 'LR' },
-                    { key: 'figma', type: 'figma', label: 'Figma' },
-                    { key: 'ps-2', label: 'PS' },
-                    { key: 'adobe', type: 'adobe', label: 'Adobe' },
-                    { key: 'ae', label: 'AE' },
-                    { key: 'ai', label: 'AI' },
-                    { key: 'css', label: 'CSS' },
-                    { key: 'html', label: 'HTML' },
-                    { key: 'js', label: 'JS' },
-                  ].map(({ key, label, type }) => (
-                    <span
-                      key={key}
-                      role="listitem"
-                      className={`home-two-skills__icon ${type ? `home-two-skills__icon--${type}` : ''}`}
-                      aria-label={type ? label : undefined}
-                    >
-                      {type === 'figma' ? (
-                        <svg viewBox="0 0 60 90" className="home-two-skills__figma" aria-hidden="true">
-                          <defs>
-                            <clipPath id="figmaClip">
-                              <rect x="0" y="0" width="60" height="90" rx="18" ry="18" />
-                            </clipPath>
-                          </defs>
-                          <g clipPath="url(#figmaClip)">
-                            <circle cx="30" cy="18" r="18" fill="#f24e1e" />
-                            <circle cx="12" cy="30" r="18" fill="#ff7262" />
-                            <circle cx="48" cy="30" r="18" fill="#a259ff" />
-                            <circle cx="12" cy="60" r="18" fill="#0acf83" />
-                            <circle cx="30" cy="72" r="18" fill="#1abcfe" />
-                          </g>
-                        </svg>
-                      ) : type === 'adobe' ? (
-                        <span aria-hidden="true">A</span>
-                      ) : (
-                        label
-                      )}
-                    </span>
-                  ))}
+                  {skills.map((skill) => {
+                    const skillName = skill.name?.toLowerCase() || '';
+                    const isFigma = skillName.includes('figma');
+                    const isAdobe = skillName.includes('adobe');
+                    const displayLabel = skill.name || skill.label || '';
+                    
+                    return (
+                      <span
+                        key={skill.id}
+                        role="listitem"
+                        className={`home-two-skills__icon ${isFigma ? 'home-two-skills__icon--figma' : ''} ${isAdobe ? 'home-two-skills__icon--adobe' : ''}`}
+                        aria-label={isFigma || isAdobe ? displayLabel : undefined}
+                      >
+                        {isFigma ? (
+                          <svg viewBox="0 0 60 90" className="home-two-skills__figma" aria-hidden="true">
+                            <defs>
+                              <clipPath id="figmaClip">
+                                <rect x="0" y="0" width="60" height="90" rx="18" ry="18" />
+                              </clipPath>
+                            </defs>
+                            <g clipPath="url(#figmaClip)">
+                              <circle cx="30" cy="18" r="18" fill="#f24e1e" />
+                              <circle cx="12" cy="30" r="18" fill="#ff7262" />
+                              <circle cx="48" cy="30" r="18" fill="#a259ff" />
+                              <circle cx="12" cy="60" r="18" fill="#0acf83" />
+                              <circle cx="30" cy="72" r="18" fill="#1abcfe" />
+                            </g>
+                          </svg>
+                        ) : isAdobe ? (
+                          <span aria-hidden="true">A</span>
+                        ) : (
+                          displayLabel
+                        )}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
               <article className="home-two-education" aria-label="Education">
                 <h4>Education</h4>
                 <ul>
-                  <li>
-                    <span className="home-two-education__year">2025–2026</span>
-                    <span className="home-two-education__school">Egypt University of Informatics</span>
-                    <span className="home-two-education__program">Digital Arts &amp; Design – UX/UI</span>
-                  </li>
-                  <li>
-                    <span className="home-two-education__year">2024</span>
-                    <span className="home-two-education__school">CLS Center</span>
-                    <span className="home-two-education__program">Front-end Code</span>
-                  </li>
+                  {experience
+                    .filter(exp => exp.type === 'education')
+                    .map((edu) => (
+                      <li key={edu.id}>
+                        <span className="home-two-education__year">
+                          {edu.year_display || `${edu.year_start}${edu.year_end ? `–${edu.year_end}` : ''}`}
+                        </span>
+                        <span className="home-two-education__school">{edu.instution_en || edu.institution_en}</span>
+                        <span className="home-two-education__program">{edu.program_en}</span>
+                      </li>
+                    ))}
                 </ul>
               </article>
             </div>
@@ -419,33 +453,28 @@ export default function HomeTwoEN() {
 
           <section className="home-two-strengths" aria-label="Strengths">
             <div className="container">
-              <h3>My Strengths as a UX/UI Designer</h3>
-              <div className="home-two-strengths__deck">
-                <BounceCards
-                  items={strengthCards}
-                  transformStyles={strengthTransforms}
-                  containerWidth={640}
-                  containerHeight={320}
-                  animationDelay={0.6}
-                  animationStagger={0.1}
-                  easeType="elastic.out(1, 0.6)"
-                />
-              </div>
+              <h3>{getContent('strengths_title')}</h3>
+              {strengthCards.length > 0 && (
+                <div className="home-two-strengths__deck">
+                  <BounceCards
+                    items={strengthCards}
+                    transformStyles={strengthTransforms}
+                    containerWidth={640}
+                    containerHeight={320}
+                    animationDelay={0.6}
+                    animationStagger={0.1}
+                    easeType="elastic.out(1, 0.6)"
+                  />
+                </div>
+              )}
             </div>
           </section>
 
           <section className="home-two-app" aria-label="App design">
             <div className="container home-two-app__grid">
               <div className="home-two-app__text">
-                <h3>App Design</h3>
-                <p>
-                  Frictionless flows, clear UI states and purposeful micro-interactions that make everyday apps
-                  feel joyful and familiar.
-                </p>
-                <p>
-                  I love translating complex journeys into polished mobile experiences with clean visuals
-                  and strong UX writing.
-                </p>
+                <h3>{getContent('app_design_title')}</h3>
+                <div dangerouslySetInnerHTML={{ __html: getContent('app_design_description') }} />
               </div>
               <div className="home-two-app__media" aria-hidden="true">
                 <span className="home-two-app__label">App design</span>
@@ -456,51 +485,32 @@ export default function HomeTwoEN() {
 
           <section className="home-two-values" aria-label="Values">
             <div className="container">
-              <h3>My Values as a UX/UI Designer</h3>
-              <div className="home-two-values__tilted">
-                {[
-                  {
-                    title: 'Human first',
-                    description:
-                      'As a UX/UI designer I always prioritize user needs—my goal is to turn their goals into a product reality that feels intuitive and delightful.',
-                  },
-                  {
-                    title: 'Always curious',
-                    description:
-                      'As a UX/UI designer I keep learning every day. Design evolves fast, so I chase the updates, trends and insights that keep experiences fresh.',
-                  },
-                  {
-                    title: 'Inventive spirit',
-                    description:
-                      'As a UX/UI designer I love creating. I experiment, iterate and craft new solutions to any friction or problem the journey reveals.',
-                  },
-                  {
-                    title: 'Collaboration is power',
-                    description:
-                      'As a UX/UI designer I believe teamwork elevates every idea. Co-creating with product, engineering and marketing opens better paths forward.',
-                  },
-                ].map(({ title, description }) => (
-                  <div key={title} className="home-two-values__item">
-                    <TiltedCard
-                      containerHeight="320px"
-                      containerWidth="100%"
-                      imageHeight="320px"
-                      imageWidth="320px"
-                      rotateAmplitude={12}
-                      scaleOnHover={1.22}
-                      showMobileWarning={false}
-                      showTooltip={false}
-                      isTextOnly
-                      overlayContent={
-                        <div className="home-two-values__cardtext">
-                          <h4>{title}</h4>
-                          <p>{description}</p>
-                        </div>
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
+              <h3>{getContent('values_title')}</h3>
+              {valuesCards.length > 0 && (
+                <div className="home-two-values__tilted">
+                  {valuesCards.map((card, index) => (
+                    <div key={index} className="home-two-values__item">
+                      <TiltedCard
+                        containerHeight="320px"
+                        containerWidth="100%"
+                        imageHeight="320px"
+                        imageWidth="320px"
+                        rotateAmplitude={12}
+                        scaleOnHover={1.22}
+                        showMobileWarning={false}
+                        showTooltip={false}
+                        isTextOnly
+                        overlayContent={
+                          <div className="home-two-values__cardtext">
+                            <h4>{card.title}</h4>
+                            <p>{card.description}</p>
+                          </div>
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
 
@@ -517,20 +527,22 @@ export default function HomeTwoEN() {
 
           <section className="home-two-tabs" aria-label="Growing as a designer">
             <div className="container">
-              <h3>Growing as a Designer</h3>
-              <MagicBento
-                textAutoHide
-                enableStars
-                enableSpotlight
-                enableBorderGlow
-                enableTilt
-                enableMagnetism
-                clickEffect
-                spotlightRadius={300}
-                particleCount={12}
-                glowColor="132, 0, 255"
-                cards={growingCards}
-              />
+              <h3>{getContent('growing_title')}</h3>
+              {growingCards.length > 0 && (
+                <MagicBento
+                  textAutoHide
+                  enableStars
+                  enableSpotlight
+                  enableBorderGlow
+                  enableTilt
+                  enableMagnetism
+                  clickEffect
+                  spotlightRadius={300}
+                  particleCount={12}
+                  glowColor="132, 0, 255"
+                  cards={growingCards}
+                />
+              )}
             </div>
           </section>
 

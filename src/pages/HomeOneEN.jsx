@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import LiquidEther from '../components/LiquidEther';
+import { supabase } from './Supabase';
 import './HomeOne.css';
 
 export default function HomeOneEN() {
@@ -13,6 +14,75 @@ export default function HomeOneEN() {
   const cameFromHomeTwo = location.state?.from === 'home-two';
   const [entering, setEntering] = useState(!cameFromHomeTwo);
   const [leaving, setLeaving] = useState(false);
+  const [heroContent, setHeroContent] = useState({
+    title: '',
+    subtitle: '',
+    paragraph: ''
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getAllHomeContentAPI() {
+      try {
+        // Try without special character first (more reliable)
+        let res = await supabase.from("home_about_category_content").select("*").eq("section", "home");
+        console.log("First try (without special char):", res);
+        
+        // If that fails, try with special character
+        if (res.error) {
+          console.log("First try failed, trying with special character...");
+          res = await supabase.from("homeـ_about_category_content").select("*").eq("section", "home");
+          console.log("Second try (with special char):", res);
+        }
+        
+        if (res.error) {
+          console.error("❌ Error:", res.error);
+          console.error("Error message:", res.error.message);
+          console.error("Error details:", res.error.details);
+          console.error("Error hint:", res.error.hint);
+          console.error("Status:", res.status);
+        }
+        
+        if (res.data && res.data.length > 0) {
+          console.log("✅ Data received:", res.data.length, "items");
+          console.log("📋 Full data array:", res.data);
+          
+          const contentMap = {};
+          res.data.forEach(item => {
+            console.log(`📌 Item key: "${item.key}", content_en:`, item.content_en ? "Has content" : "EMPTY");
+            contentMap[item.key] = item;
+          });
+          
+          console.log("🗺️ Content map keys:", Object.keys(contentMap));
+          console.log("🔍 Looking for: hero_title, hero_subtitle, hero_paragraph");
+          
+          const newContent = {
+            title: contentMap['hero_title']?.content_en || '',
+            subtitle: contentMap['hero_subtitle']?.content_en || '',
+            paragraph: contentMap['hero_paragraph']?.content_en || ''
+          };
+          
+          console.log("💾 Setting heroContent:", newContent);
+          console.log("Title:", newContent.title ? "HAS CONTENT" : "EMPTY");
+          console.log("Subtitle:", newContent.subtitle ? "HAS CONTENT" : "EMPTY");
+          console.log("Paragraph:", newContent.paragraph ? "HAS CONTENT" : "EMPTY");
+          
+          setHeroContent(newContent);
+        } else {
+          console.warn("⚠️ No data received or empty array");
+          console.warn("Response data:", res.data);
+        }
+      } catch (err) {
+        console.error("❌ Exception caught:", err);
+        console.error("Error type:", err.constructor.name);
+        console.error("Error message:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    getAllHomeContentAPI();
+  }, []);
 
   useEffect(() => {
     if (cameFromHomeTwo) {
@@ -113,17 +183,25 @@ export default function HomeOneEN() {
           }`}
         >
           <div className="home-one-hero__text">
-            <h1 className="home-one-hero__title">
-              Hello Im Jana Ahmed Ahmed<br />Passonat Ux/Ui Designer
-            </h1>
-            <p className="home-one-hero__subtitle">
-              UX/Ui Designer&nbsp;| Graphic Designer&nbsp;| Content Creator&nbsp;| Sales
-            </p>
-            <p className="home-one-hero__paragraph">
-              I’m Jana a hijabi girl with a designer’s eye and a car lover’s heart. I mix pixels and
-              horsepower like it’s an art form. I believe every design (and every car) should have
-              personality, attitude, and a little chaos&nbsp;— just like me.
-            </p>
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <h1 className="home-one-hero__title" dangerouslySetInnerHTML={{ __html: heroContent.title || 'No title from API' }} />
+                <p className="home-one-hero__subtitle">
+                  {heroContent.subtitle || 'No subtitle from API'}
+                </p>
+                <p className="home-one-hero__paragraph">
+                  {heroContent.paragraph || 'No paragraph from API'}
+                </p>
+                {/* Debug info */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div style={{fontSize: '12px', color: '#888', marginTop: '20px'}}>
+                    Debug: Title={heroContent.title ? 'YES' : 'NO'}, Subtitle={heroContent.subtitle ? 'YES' : 'NO'}, Paragraph={heroContent.paragraph ? 'YES' : 'NO'}
+                  </div>
+                )}
+              </>
+            )}
           </div>
           <div className="home-one-hero__image" aria-hidden="true">
             <img src="/imgs/home page/hero-img.png" alt="Jana Ahmed portrait" />

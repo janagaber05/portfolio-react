@@ -24,6 +24,10 @@ import EgyAirAR from '../pages/EgyAirAR';
 import BlogDetailEmotionEN from '../pages/BlogDetailEmotionEN';
 import NotFoundEN from '../pages/NotFoundEN';
 import NotFoundAR from '../pages/NotFoundAR';
+import TestAPI from '../pages/TestAPI';
+import SupabasePage from '../pages/SupabasePage';
+import ProjectsExample from '../components/examples/ProjectsExample';
+import ContactFormExample from '../components/examples/ContactFormExample';
 
 // List of valid/complete routes
 const VALID_ROUTES = [
@@ -54,7 +58,7 @@ const VALID_ROUTES = [
   '/404-ar'
 ];
 
-// Component to handle 404 redirects based on language
+
 function NotFoundRedirect() {
   const location = useLocation();
   const isAr = location.pathname.includes('-ar') || location.pathname.startsWith('/ar');
@@ -86,6 +90,10 @@ export default function AppRoutes() {
       <Route path="/3d-design-ar" element={<ThreeDDesignAR />} />
       <Route path="/egy-air" element={<EgyAirEN />} />
       <Route path="/egy-air-ar" element={<EgyAirAR />} />
+      <Route path="/test-api" element={<TestAPI />} />
+      <Route path="/supabase" element={<SupabasePage />} />
+      <Route path="/examples/projects" element={<ProjectsExample />} />
+      <Route path="/examples/contact" element={<ContactFormExample />} />
       <Route path="/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo" element={<BlogDetailEmotionEN />} />
       <Route path="/404" element={<NotFoundEN />} />
       <Route path="/404-ar" element={<NotFoundAR />} />

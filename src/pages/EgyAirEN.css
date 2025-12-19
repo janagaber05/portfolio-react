@@ -47,9 +47,7 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 /* Egy Air Overview Section */
@@ -70,9 +68,7 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 .egyair-overview-text {
@@ -130,9 +126,7 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 /* Egy Air Cultural Message Section */
@@ -196,9 +190,7 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 /* Egy Air Color Choice Section */
@@ -284,9 +276,7 @@
   height: auto;
   border: 2px solid #ffffff;
   border-radius: 16px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 /* Egy Air Why This Works Section */
@@ -344,9 +334,7 @@
   width: 100%;
   max-width: 400px;
   height: auto;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
 }
 
 /* Responsive Styles for Egy Air Project */

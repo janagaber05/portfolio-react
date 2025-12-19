@@ -1,8 +1,53 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import CircularGallery from '../components/CircularGallery';
+import { supabase } from './Supabase';
 import './CategoryEN.css';
 
 export default function CategoryEN() {
+  const [categoryContent, setCategoryContent] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getAllCategoryContentAPI() {
+      try {
+        // Try without special character first
+        let res = await supabase.from("home_about_category_content").select("*").eq("section", "category");
+        console.log("CategoryEN - First try (without special char):", res);
+        
+        // If that fails, try with special character
+        if (res.error) {
+          console.log("CategoryEN - Trying with special character...");
+          res = await supabase.from("homeـ_about_category_content").select("*").eq("section", "category");
+          console.log("CategoryEN - Second try (with special char):", res);
+        }
+        
+        if (res.error) {
+          console.error("CategoryEN Error:", res.error);
+        }
+        
+        if (res.data) {
+          console.log("CategoryEN - Data received:", res.data.length, "items");
+          setCategoryContent(res.data || []);
+        }
+      } catch (err) {
+        console.error("CategoryEN - Exception:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    getAllCategoryContentAPI();
+  }, []);
+
+  // Helper function to get content by key
+  const getContent = (key) => {
+    const item = categoryContent.find(item => item.key === key);
+    return item?.content_en || '';
+  };
+
+  if (loading) return <Layout lang="en"><div>Loading...</div></Layout>;
+
   return (
     <Layout lang="en">
       <section className="hero hero-cover work-hero" id="top" aria-label="Work hero">
@@ -10,9 +55,9 @@ export default function CategoryEN() {
         <div className="container hero-center">
           <div className="work-hero__content">
             <div className="work-hero__text">
-              <h1 className="hero-title">My Work</h1>
-              <p className="subline subline-centered">My Creative Universe</p>
-              <p className="muted muted-centered">A showcase of projects that blend design, code, and imagination.</p>
+              <h1 className="hero-title">{getContent('hero_title')}</h1>
+              <p className="subline subline-centered">{getContent('hero_subtitle')}</p>
+              <p className="muted muted-centered">{getContent('hero_description')}</p>
               <p className="btn-wrapper-centered"><a className="btn" href="#cats">Explore More</a></p>
             </div>
             <div className="work-hero__image" aria-hidden="true">

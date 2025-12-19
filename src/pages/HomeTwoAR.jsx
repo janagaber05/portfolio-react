@@ -8,6 +8,7 @@ import TiltedCard from '../components/TiltedCard';
 import CurvedLoop from '../components/CurvedLoop';
 import './HomeTwo.css';
 import Footer from '../components/Footer';
+import { supabase } from './Supabase';
 
 const socialIconSetAr = [
   { icon: 'youtube', label: 'يوتيوب' },
@@ -113,43 +114,14 @@ export default function HomeTwoAR() {
   const startY = useRef(0);
   const [entering, setEntering] = useState(true);
 
-  const strengthCards = [
-    {
-      title: 'مصممة UX/UI طموحة',
-      description:
-        'أفكر دائماً بحجم أكبر؛ تأسيس شركة تجمع التسويق الرقمي وصناعة المحتوى وتصميم الويب تحت علامة واحدة جريئة.',
-      background:
-        'linear-gradient(188deg, rgba(193,172,255,0.95), rgba(98,67,199,0.92))',
-    },
-    {
-      title: 'مصممة UX/UI مبدعة وبصيرة',
-      description:
-        'كل مشروع هو مساحة للإبداع. أعتني بكل تفصيلة في الموقع أو التطبيق أو الهوية لأضمن أن التجربة متكاملة.',
-      background:
-        'linear-gradient(189deg, rgba(186,165,255,0.94), rgba(104,73,200,0.92))',
-    },
-    {
-      title: 'مصممة UX/UI صبورة',
-      description:
-        'لا أستسلم للمصاعب؛ أعود دائماً بطاقة أكبر وأفكار أقوى وأحافظ على التزامي بالنتيجة النهائية.',
-      background:
-        'linear-gradient(189deg, rgba(181,158,249,0.94), rgba(99,68,188,0.9))',
-    },
-    {
-      title: 'مصممة UX/UI ملتزمة',
-      description:
-        'عندما أبدأ مشروعاً أنهيه بأعلى جودة. أتعلم باستمرار وأتابع أحدث اتجاهات تجربة المستخدم لأبقى متقدمة.',
-      background:
-        'linear-gradient(189deg, rgba(176,150,242,0.94), rgba(92,64,182,0.9))',
-    },
-    {
-      title: 'مصممة UX/UI مستقلة التفكير',
-      description:
-        'لا أقلد الآخرين؛ أبتكر حلولاً فريدة تمزج بين البحث والابتكار لأقدّم تجارب مختلفة فعلاً.',
-      background:
-        'linear-gradient(189deg, rgba(170,142,236,0.94), rgba(86,59,177,0.92))',
-    },
-  ];
+  // API state
+  const [homeContent, setHomeContent] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [experience, setExperience] = useState([]);
+  const [strengthCards, setStrengthCards] = useState([]);
+  const [valuesCards, setValuesCards] = useState([]);
+  const [growingCards, setGrowingCards] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const strengthTransforms = [
     'rotate(5deg) translate(-150px)',
@@ -158,6 +130,70 @@ export default function HomeTwoAR() {
     'rotate(2deg) translate(70px)',
     'rotate(-4deg) translate(150px)',
   ];
+
+  // Fetch data from Supabase
+  useEffect(() => {
+    async function getAllHomeContentAPI() {
+      try {
+        let res = await supabase.from("homeـ_about_category_content").select("*").eq("section", "home");
+        if (res.error) {
+          console.error("HomeTwoAR Error:", res.error);
+        }
+        if (res.data) {
+          setHomeContent(res.data || []);
+          res.data.forEach(item => {
+            if (item.metadata) {
+              try {
+                const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
+                if (item.key === 'strengths' && metadata.cards) {
+                  setStrengthCards(metadata.cards);
+                }
+                if (item.key === 'values' && metadata.cards) {
+                  setValuesCards(metadata.cards);
+                }
+                if (item.key === 'growing' && metadata.cards) {
+                  setGrowingCards(metadata.cards);
+                }
+              } catch (e) {
+                console.error('Error parsing metadata for', item.key, e);
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error("HomeTwoAR - Exception:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function getAllSkillsAPI() {
+      try {
+        const res = await supabase.from("skills").select("*");
+        if (res.data) setSkills(res.data || []);
+      } catch (err) {
+        console.error("Skills API Error (AR):", err);
+      }
+    }
+
+    async function getAllExperienceAPI() {
+      try {
+        const res = await supabase.from("experience").select("*");
+        if (res.data) setExperience(res.data || []);
+      } catch (err) {
+        console.error("Experience API Error (AR):", err);
+      }
+    }
+
+    getAllHomeContentAPI();
+    getAllSkillsAPI();
+    getAllExperienceAPI();
+  }, []);
+
+  const getContent = (key) => {
+    const item = homeContent.find(i => i.key === key);
+    return item?.content_ar || '';
+  };
 
   useEffect(() => {
     const timeout = setTimeout(() => setEntering(false), 40);
@@ -248,11 +284,8 @@ export default function HomeTwoAR() {
                 <img src="/imgs/home page/hero-img.png" alt="صورة جنا أحمد" />
               </div>
               <div className="home-two__card" role="region" aria-label="تعرف عليّ">
-                <h2>تعرف عليّ</h2>
-                <p>أنا مصممة UX/UI أعمل دائماً فيما أحب لأقدم أفضل نتيجة ممكنة.</p>
-                <p>أستمتع بكل ما أعمل عليه، ولذلك أحب عملي دائماً.</p>
-                <p>أحب صناعة المحتوى وتحرير الفيديوهات، وأنا مبدعة جداً في هذا الجزء.</p>
-                <p>أبتكر الأفكار والاتجاهات من العدم وأحوّلها إلى واقع ملموس.</p>
+                <h2>{getContent('know_me_title') || ''}</h2>
+                <p>{getContent('know_me_description') || ''}</p>
               </div>
             </div>
           </section>
@@ -298,10 +331,9 @@ export default function HomeTwoAR() {
                 />
               </figure>
               <div className="home-two-approach__text">
-                <h3>منهجي كمصممة UX/UI</h3>
+                <h3>{getContent('approach_title') || ''}</h3>
                 <p>
-                  كل مشروع يبدأ بالاستماع. أترجم أهداف العمل إلى تدفقات بسيطة، وأكتشف الفرص أثناء البحث،
-                  وأحافظ على قصة مليئة بالطاقة حتى موعد الإطلاق.
+                  {getContent('approach_description') || ''}
                 </p>
               </div>
             </div>
@@ -382,15 +414,19 @@ export default function HomeTwoAR() {
             <div className="container">
               <h3>نقاط قوتي في تصميم UX/UI</h3>
               <div className="home-two-strengths__deck">
-                <BounceCards
-                  items={strengthCards}
-                  transformStyles={strengthTransforms}
-                  containerWidth={640}
-                  containerHeight={320}
-                  animationDelay={0.6}
-                  animationStagger={0.1}
-                  easeType="elastic.out(1, 0.6)"
-                />
+                {strengthCards.length > 0 ? (
+                  <BounceCards
+                    items={strengthCards}
+                    transformStyles={strengthTransforms}
+                    containerWidth={640}
+                    containerHeight={320}
+                    animationDelay={0.6}
+                    animationStagger={0.1}
+                    easeType="elastic.out(1, 0.6)"
+                  />
+                ) : (
+                  <div style={{ color: '#ccc', textAlign: 'center' }}>{loading ? 'جار التحميل...' : 'لا توجد بيانات'}</div>
+                )}
               </div>
             </div>
           </section>
@@ -417,48 +453,31 @@ export default function HomeTwoAR() {
             <div className="container">
               <h3>قيمــي كمصممة UX/UI</h3>
               <div className="home-two-values__tilted">
-                {[
-                  {
-                    title: 'المستخدم أولاً',
-                    description:
-                      'بصفتي مصممة UX/UI أضع احتياجات المستخدم في المقدمة، هدفي أن أجعل أحلامه حقيقة داخل المنتج بشكل بسيط وممتع.',
-                  },
-                  {
-                    title: 'شغف التعلم',
-                    description:
-                      'بصفتي مصممة UX/UI أحرص على التعلم المستمر، فمجالنا يتطور بسرعة ودائماً هناك جديد يلهم التجارب القادمة.',
-                  },
-                  {
-                    title: 'روح الابتكار',
-                    description:
-                      'بصفتي مصممة UX/UI أستمتع بابتكار حلول وتجارب جديدة لكل تحدٍ أو مشكلة تواجه المستخدم.',
-                  },
-                  {
-                    title: 'نتشارك النجاح',
-                    description:
-                      'بصفتي مصممة UX/UI أؤمن بأن العمل الجماعي والتعاون مع الفرق المختلفة يصنع نتائج أقوى وأفكاراً أغنى.',
-                  },
-                ].map(({ title, description }) => (
-                  <div key={title} className="home-two-values__item">
-                    <TiltedCard
-                      containerHeight="320px"
-                      containerWidth="100%"
-                      imageHeight="320px"
-                      imageWidth="320px"
-                      rotateAmplitude={12}
-                      scaleOnHover={1.22}
-                      showMobileWarning={false}
-                      showTooltip={false}
-                      isTextOnly
-                      overlayContent={
-                        <div className="home-two-values__cardtext home-two-values__cardtext--rtl">
-                          <h4>{title}</h4>
-                          <p>{description}</p>
-                        </div>
-                      }
-                    />
-                  </div>
-                ))}
+                {valuesCards.length > 0 ? (
+                  valuesCards.map(({ title, description }, idx) => (
+                    <div key={`${title}-${idx}`} className="home-two-values__item">
+                      <TiltedCard
+                        containerHeight="320px"
+                        containerWidth="100%"
+                        imageHeight="320px"
+                        imageWidth="320px"
+                        rotateAmplitude={12}
+                        scaleOnHover={1.22}
+                        showMobileWarning={false}
+                        showTooltip={false}
+                        isTextOnly
+                        overlayContent={
+                          <div className="home-two-values__cardtext home-two-values__cardtext--rtl">
+                            <h4>{title}</h4>
+                            <p>{description}</p>
+                          </div>
+                        }
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ color: '#ccc', textAlign: 'center' }}>{loading ? 'جار التحميل...' : 'لا توجد بيانات'}</div>
+                )}
               </div>
             </div>
           </section>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import LiquidEther from '../components/LiquidEther';
+import { useSectionContent } from '../hooks/useHomeContent';
 import './HomeOne.css';
 
 export default function HomeOneAR() {
@@ -13,6 +14,7 @@ export default function HomeOneAR() {
   const cameFromHomeTwo = location.state?.from === 'home-two';
   const [entering, setEntering] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const { getContent } = useSectionContent('home', 'ar');
 
   useEffect(() => {
     if (cameFromHomeTwo) {
@@ -114,14 +116,13 @@ export default function HomeOneAR() {
         >
           <div className="home-one-hero__text">
             <h1 className="home-one-hero__title">
-              مرحباً أنا جنا أحمد أحمد<br />مصممة UX/UI شغوفة
+              {getContent('hero_title') || ''}
             </h1>
             <p className="home-one-hero__subtitle">
-              مصممة UX/UI | مصممة جرافيك | صانعة محتوى | مبيعات
+              {getContent('hero_subtitle') || ''}
             </p>
             <p className="home-one-hero__paragraph">
-              أنا جنا، فتاة محجبة بعين مصممة وقلب يعشق السيارات. أمزج البكسلات مع الحصان الميكانيكي كأنه فن.
-              أؤمن أن كل تصميم&nbsp;— مثل كل سيارة&nbsp;— يجب أن يمتلك شخصية وروحاً وقليلاً من الفوضى تماماً مثلي.
+              {getContent('hero_paragraph') || ''}
             </p>
           </div>
           <div className="home-one-hero__image" aria-hidden="true">

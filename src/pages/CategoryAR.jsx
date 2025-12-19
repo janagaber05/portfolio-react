@@ -1,8 +1,21 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import CircularGallery from '../components/CircularGallery';
+import { useSectionContent } from '../hooks/useHomeContent';
 import './CategoryAR.css';
 
 export default function CategoryAR() {
+  const { getContent } = useSectionContent('category', 'ar');
+  const [hero, setHero] = useState({ title: '', subline: '', muted: '' });
+
+  useEffect(() => {
+    setHero({
+      title: getContent('hero_title') || '',
+      subline: getContent('hero_subtitle') || '',
+      muted: getContent('hero_paragraph') || '',
+    });
+  }, [getContent]);
+
   return (
     <Layout lang="ar">
       <section className="hero hero-cover work-hero" id="top" aria-label="غلاف الأعمال">
@@ -10,9 +23,9 @@ export default function CategoryAR() {
         <div className="container hero-center">
           <div className="work-hero__content" dir="rtl">
             <div className="work-hero__text">
-              <h1 className="hero-title">أعمالي</h1>
-              <p className="subline subline-centered">عالمي الإبداعي</p>
-              <p className="muted muted-centered">عرض لمشاريع تمزج بين التصميم والبرمجة والخيال.</p>
+              <h1 className="hero-title">{hero.title}</h1>
+              <p className="subline subline-centered">{hero.subline}</p>
+              <p className="muted muted-centered">{hero.muted}</p>
               <p className="btn-wrapper-centered"><a className="btn" href="#cats">استكشفي المزيد</a></p>
             </div>
             <div className="work-hero__image" aria-hidden="true">

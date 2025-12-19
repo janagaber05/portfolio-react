@@ -4,6 +4,7 @@ import BounceCards from '../components/BounceCards';
 import TiltedCard from '../components/TiltedCard';
 import Stack from '../components/Stack';
 import LiquidEther from '../components/LiquidEther';
+import { useSectionContent } from '../hooks/useHomeContent';
 import './AboutAR.css';
 
 const strengthCards = [
@@ -48,6 +49,8 @@ const strengthTransforms = [
 ];
 
 export default function AboutAR() {
+  const { getContent } = useSectionContent('about', 'ar');
+
   return (
     <Layout lang="ar">
       <div className="about-page">
@@ -75,7 +78,9 @@ export default function AboutAR() {
       <section className="hero hero-cover" id="hero" aria-label="About hero">
         <div className="hero-cover-bg" aria-hidden="true" style={{backgroundImage:"url('/imgs/home page/know-me-better-img.png')"}}></div>
         <div className="container hero-center">
-          <h1 className="hero-title">Lest's Know <span className="accent">Me Better</span></h1>
+          <h1 className="hero-title">
+            {getContent('hero_title') || ''}
+          </h1>
         </div>
       </section>
 
@@ -96,11 +101,8 @@ export default function AboutAR() {
             <img src="/imgs/3d-object.png" alt="3D object" />
           </div>
           <div className="know-me__card" role="region" aria-label="Know Me card">
-            <h2>Know Me</h2>
-            <p>I'm a UX/UI Designer that always work on what she loves so she can give 100% results</p>
-            <p>I work in every thing I like so I always love what I do</p>
-            <p>I really like creating content editing videos also I'm very creative in this part</p>
-            <p>idea, trends from no wear and creating them</p>
+            <h2>{getContent('know_me_title') || ''}</h2>
+            <p>{getContent('know_me_description') || ''}</p>
           </div>
         </div>
       </section>
@@ -108,9 +110,9 @@ export default function AboutAR() {
       <section className="about-approach" aria-label="Design approach">
         <div className="container about-approach__grid">
           <div className="about-approach__text">
-            <h3>My Approach as a UX/UI Designer</h3>
+            <h3>{getContent('approach_title') || ''}</h3>
             <p>
-              As a UX/UI designer Web developer I believe that every challenge and problem can be solved by design so by using UX and web design I tend t create solutions to these problems
+              {getContent('approach_description') || ''}
             </p>
           </div>
           <figure className="about-approach__media">

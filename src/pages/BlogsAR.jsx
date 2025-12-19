@@ -1,58 +1,35 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import TiltedCard from '../components/TiltedCard';
 import LiquidEther from '../components/LiquidEther';
 import { Link } from 'react-router-dom';
+import { getAllBlogs } from '../lib/api/blogs';
 import './BlogsAR.css';
 
-const RECENT_POSTS = [
-  {
-    title: 'التصميم بالعاطفة: كيف تشكل الألوان تجربة المستخدم',
-    href: '/designing-with-emotion-how-colors-shape-user-experience-ui-designer-in-cairo-ar',
-    image: '/imgs/Frame 42.png',
-    alt: 'مكتب',
-    caption: 'التصميم بالعاطفة'
-  },
-  {
-    title: 'من فكرة لواجهة: رحلتي في تصميم التطبيقات',
-    href: '#',
-    image: '/imgs/Frame 40.png',
-    alt: 'واجهات نيون',
-    caption: 'رحلة التصميم'
-  },
-  {
-    title: 'فن التوازن: إدارة الإبداع والاتساق في التصميم',
-    href: '#',
-    image: '/imgs/Frame 18.png',
-    alt: 'توازن',
-    caption: 'فن التوازن'
-  },
-];
-
-const PAST_POSTS = [
-  {
-    title: 'دراسة حالة: بناء هوية تطبيق لايف ستايل',
-    image: '/imgs/Frame 8.png',
-    alt: 'دراسة حالة',
-    excerpt:
-      'حكاية بناء هوية كاملة لتطبيق شبابي في القاهرة، من اختيار الشخصية الصوتية إلى الشاشات النهائية.',
-  },
-  {
-    title: 'التعاون مع المطورين لواجهة سلسة',
-    image: '/imgs/Frame 17.png',
-    alt: 'تعاون',
-    excerpt:
-      'أفضل ممارساتي في التنسيق مع المطورين، وتسليم ملفات Figma واضحة مع حالات تفاعلية كاملة.',
-  },
-  {
-    title: 'التفاعلات الدقيقة والحركة في تجربة المستخدم',
-    image: '/imgs/Frame 13.png',
-    alt: 'حركة',
-    excerpt:
-      'لماذا تعد الحركة الدقيقة جزءاً من بناء ثقة المستخدم، مع أمثلة لأنيميشن أستخدمها في مشاريعي.',
-  },
-];
-
 export default function BlogsAR() {
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      setLoading(true);
+      setError(null);
+      const { data, error: fetchError } = await getAllBlogs();
+      if (fetchError) {
+        setError(fetchError);
+        setBlogPosts([]);
+      } else {
+        setBlogPosts(data || []);
+      }
+      setLoading(false);
+    }
+    fetchBlogs();
+  }, []);
+
+  const recentPosts = blogPosts.slice(0, 3);
+  const pastPosts = blogPosts.slice(3);
+
   return (
     <Layout lang="ar">
       <div className="blogs-page" dir="rtl">
@@ -115,37 +92,45 @@ export default function BlogsAR() {
               </p>
             </div>
             <div className="blogs-grid">
-              {RECENT_POSTS.map(post => (
-                <article key={post.title} className="blog-card">
-                  <div className="blog-card__media">
-                    <TiltedCard
-                      imageSrc={post.image}
-                      altText={post.alt}
-                      captionText={post.caption}
-                      containerHeight="260px"
-                      containerWidth="100%"
-                      imageHeight="260px"
-                      imageWidth="100%"
-                      rotateAmplitude={12}
-                      scaleOnHover={1.12}
-                      showMobileWarning={false}
-                      showTooltip={false}
-                      displayOverlayContent={false}
-                    />
-                  </div>
-                  <h4 className="blog-card__title">
-                    <Link className="blog-card__link" to={post.href}>
-                      {post.title}
-                    </Link>
-                  </h4>
-                  <p className="blog-card__excerpt">{post.excerpt}</p>
-                  <div className="blog-card__actions">
-                    <Link className="pill" to={post.href}>
-                      اقرأ المقال
-                    </Link>
-                  </div>
-                </article>
-              ))}
+              {loading ? (
+                <div>جار التحميل...</div>
+              ) : error ? (
+                <div style={{ color: 'red' }}>خطأ في جلب المقالات</div>
+              ) : recentPosts.length > 0 ? (
+                recentPosts.map(post => (
+                  <article key={post.id} className="blog-card">
+                    <div className="blog-card__media">
+                      <TiltedCard
+                        imageSrc={post.featured_image}
+                        altText={post.title_ar}
+                        captionText={post.title_ar}
+                        containerHeight="260px"
+                        containerWidth="100%"
+                        imageHeight="260px"
+                        imageWidth="100%"
+                        rotateAmplitude={12}
+                        scaleOnHover={1.12}
+                        showMobileWarning={false}
+                        showTooltip={false}
+                        displayOverlayContent={false}
+                      />
+                    </div>
+                    <h4 className="blog-card__title">
+                      <Link className="blog-card__link" to={`/blog/${post.slug}`}>
+                        {post.title_ar}
+                      </Link>
+                    </h4>
+                    <p className="blog-card__excerpt">{post.excerpt_ar}</p>
+                    <div className="blog-card__actions">
+                      <Link className="pill" to={`/blog/${post.slug}`}>
+                        اقرأ المقال
+                      </Link>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div>لا توجد مقالات</div>
+              )}
             </div>
           </section>
 
@@ -161,20 +146,28 @@ export default function BlogsAR() {
                 ‹
               </button>
               <div className="blogs-slider__track">
-                {PAST_POSTS.map(post => (
-                  <article key={post.title} className="blog-card blog-card--compact">
-                    <div className="blog-card__media">
-                      <img src={post.image} alt={post.alt} loading="lazy" />
-                    </div>
-                    <h4 className="blog-card__title">{post.title}</h4>
-                    <p className="blog-card__excerpt">{post.excerpt}</p>
-                    <div className="blog-card__actions">
-                      <a className="pill" href="#">
-                        اقرأ المقال
-                      </a>
-                    </div>
-                  </article>
-                ))}
+                {loading ? (
+                  <div>جار التحميل...</div>
+                ) : error ? (
+                  <div style={{ color: 'red' }}>خطأ في جلب المقالات</div>
+                ) : pastPosts.length > 0 ? (
+                  pastPosts.map(post => (
+                    <article key={post.id} className="blog-card blog-card--compact">
+                      <div className="blog-card__media">
+                        <img src={post.featured_image} alt={post.title_ar} loading="lazy" />
+                      </div>
+                      <h4 className="blog-card__title">{post.title_ar}</h4>
+                      <p className="blog-card__excerpt">{post.excerpt_ar}</p>
+                      <div className="blog-card__actions">
+                        <Link className="pill" to={`/blog/${post.slug}`}>
+                          اقرأ المقال
+                        </Link>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <div>لا توجد مقالات</div>
+                )}
               </div>
               <button className="blogs-slider__arrow blogs-slider__arrow--next" type="button" aria-label="المقال التالي">
                 ›

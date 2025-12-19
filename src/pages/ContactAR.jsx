@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Layout from '../components/Layout';
 import LiquidEther from '../components/LiquidEther';
 import SplitText from '../components/SplitText';
 import TiltedCard from '../components/TiltedCard';
+import { submitContact } from '../lib/api/contact';
 import './ContactAR.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -111,6 +112,17 @@ export default function ContactAR() {
   const formRef = useRef(null);
   const infoRef = useRef(null);
   const tipsRef = useRef(null);
+  const [focusedField, setFocusedField] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    request: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -254,37 +266,126 @@ export default function ContactAR() {
               <div className="contact-section__grid contact-section__grid--dual">
                 <div ref={formRef} className="contact-section__panel contact-section__panel--form">
                   <div className="panel-glow panel-glow--form" />
-                  <form className="contact-section__formgrid">
-                    <label className="form-field">
+                  <form
+                    className="contact-section__formgrid"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setSubmitting(true);
+                      setSubmitError(null);
+                      setSubmitSuccess(false);
+                      const payload = {
+                        name: `${formData.firstName} ${formData.lastName}`.trim(),
+                        email: formData.email,
+                        action: 'general',
+                        message: formData.request,
+                      };
+                      const { error } = await submitContact(payload);
+                      if (error) {
+                        setSubmitError(error);
+                      } else {
+                        setSubmitSuccess(true);
+                        setFormData({
+                          firstName: '',
+                          lastName: '',
+                          phone: '',
+                          email: '',
+                          request: '',
+                        });
+                      }
+                      setSubmitting(false);
+                    }}
+                  >
+                    <label
+                      className={`form-field ${focusedField === 'firstName' ? 'form-field--focused' : ''}`}
+                      onFocus={() => setFocusedField('firstName')}
+                      onBlur={() => setFocusedField(null)}
+                    >
                       <span className="form-icon">🙂</span>
-                      <input type="text" name="firstName" placeholder="الاسم الأول" />
+                      <input
+                        type="text"
+                        name="firstName"
+                        placeholder="الاسم الأول"
+                        value={formData.firstName}
+                        onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                        required
+                        dir="rtl"
+                      />
                       <div className="form-field__ripple" />
                     </label>
-                    <label className="form-field">
+                    <label
+                      className={`form-field ${focusedField === 'lastName' ? 'form-field--focused' : ''}`}
+                      onFocus={() => setFocusedField('lastName')}
+                      onBlur={() => setFocusedField(null)}
+                    >
                       <span className="form-icon">🙂</span>
-                      <input type="text" name="lastName" placeholder="الاسم الأخير" />
+                      <input
+                        type="text"
+                        name="lastName"
+                        placeholder="الاسم الأخير"
+                        value={formData.lastName}
+                        onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                        required
+                        dir="rtl"
+                      />
                       <div className="form-field__ripple" />
                     </label>
-                    <label className="form-field form-field--full">
+                    <label
+                      className={`form-field form-field--full ${focusedField === 'phone' ? 'form-field--focused' : ''}`}
+                      onFocus={() => setFocusedField('phone')}
+                      onBlur={() => setFocusedField(null)}
+                    >
                       <span className="form-icon">☎</span>
-                      <input type="tel" name="phone" placeholder="رقم الهاتف" />
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="رقم الهاتف"
+                        value={formData.phone}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                        dir="rtl"
+                      />
                       <div className="form-field__ripple" />
                     </label>
-                    <label className="form-field form-field--full">
+                    <label
+                      className={`form-field form-field--full ${focusedField === 'email' ? 'form-field--focused' : ''}`}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
+                    >
                       <span className="form-icon">✉</span>
-                      <input type="email" name="email" placeholder="بريدك الإلكتروني" />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="بريدك الإلكتروني"
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        dir="rtl"
+                      />
                       <div className="form-field__ripple" />
                     </label>
-                    <label className="form-field form-field--full">
+                    <label
+                      className={`form-field form-field--full ${focusedField === 'request' ? 'form-field--focused' : ''}`}
+                      onFocus={() => setFocusedField('request')}
+                      onBlur={() => setFocusedField(null)}
+                    >
                       <span className="form-icon">💬</span>
-                      <textarea name="request" rows={4} placeholder="طلبك" />
+                      <textarea
+                        name="request"
+                        rows={4}
+                        placeholder="طلبك"
+                        value={formData.request}
+                        onChange={e => setFormData({ ...formData, request: e.target.value })}
+                        required
+                        dir="rtl"
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <button type="submit" className="form-submit form-field--full">
-                      <span className="form-submit__text">إرسال</span>
+                      <span className="form-submit__text">{submitting ? '...جاري الإرسال' : 'إرسال'}</span>
                       <span className="form-icon form-submit__icon">✈</span>
                       <div className="form-submit__glow" />
                     </button>
+                    {submitError && <div style={{ color: 'red', textAlign: 'right' }}>حدث خطأ في الإرسال</div>}
+                    {submitSuccess && <div style={{ color: 'green', textAlign: 'right' }}>تم الإرسال بنجاح!</div>}
                   </form>
                 </div>
 

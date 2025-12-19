@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import LiquidEther from '../components/LiquidEther';
 import SplitText from '../components/SplitText';
 import TiltedCard from '../components/TiltedCard';
+import { submitContact } from '../lib/api/contact';
 import './ContactEN.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -112,6 +113,16 @@ export default function ContactEN() {
   const infoRef = useRef(null);
   const tipsRef = useRef(null);
   const [focusedField, setFocusedField] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    request: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -255,14 +266,49 @@ export default function ContactEN() {
               <div className="contact-section__grid contact-section__grid--dual">
                 <div ref={formRef} className="contact-section__panel contact-section__panel--form">
                   <div className="panel-glow panel-glow--form" />
-                  <form className="contact-section__formgrid">
+                  <form
+                    className="contact-section__formgrid"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setSubmitting(true);
+                      setSubmitError(null);
+                      setSubmitSuccess(false);
+                      const payload = {
+                        name: `${formData.firstName} ${formData.lastName}`.trim(),
+                        email: formData.email,
+                        action: 'general',
+                        message: formData.request,
+                      };
+                      const { error } = await submitContact(payload);
+                      if (error) {
+                        setSubmitError(error);
+                      } else {
+                        setSubmitSuccess(true);
+                        setFormData({
+                          firstName: '',
+                          lastName: '',
+                          phone: '',
+                          email: '',
+                          request: '',
+                        });
+                      }
+                      setSubmitting(false);
+                    }}
+                  >
                     <label 
                       className={`form-field ${focusedField === 'firstName' ? 'form-field--focused' : ''}`}
                       onFocus={() => setFocusedField('firstName')}
                       onBlur={() => setFocusedField(null)}
                     >
                       <span className="form-icon">🙂</span>
-                      <input type="text" name="firstName" placeholder="First Name" />
+                      <input
+                        type="text"
+                        name="firstName"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                        required
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <label 
@@ -271,7 +317,14 @@ export default function ContactEN() {
                       onBlur={() => setFocusedField(null)}
                     >
                       <span className="form-icon">🙂</span>
-                      <input type="text" name="lastName" placeholder="Last Name" />
+                      <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Last Name"
+                        value={formData.lastName}
+                        onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                        required
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <label 
@@ -280,7 +333,13 @@ export default function ContactEN() {
                       onBlur={() => setFocusedField(null)}
                     >
                       <span className="form-icon">☎</span>
-                      <input type="tel" name="phone" placeholder="Phone no" />
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone no"
+                        value={formData.phone}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <label 
@@ -289,7 +348,14 @@ export default function ContactEN() {
                       onBlur={() => setFocusedField(null)}
                     >
                       <span className="form-icon">✉</span>
-                      <input type="email" name="email" placeholder="Your Email" />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Your Email"
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        required
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <label 
@@ -298,14 +364,23 @@ export default function ContactEN() {
                       onBlur={() => setFocusedField(null)}
                     >
                       <span className="form-icon">💬</span>
-                      <textarea name="request" rows={4} placeholder="Your request" />
+                      <textarea
+                        name="request"
+                        rows={4}
+                        placeholder="Your request"
+                        value={formData.request}
+                        onChange={e => setFormData({ ...formData, request: e.target.value })}
+                        required
+                      />
                       <div className="form-field__ripple" />
                     </label>
                     <button type="submit" className="form-submit form-field--full">
-                      <span className="form-submit__text">Send</span>
+                      <span className="form-submit__text">{submitting ? 'Sending...' : 'Send'}</span>
                       <span className="form-icon form-submit__icon">✈</span>
                       <div className="form-submit__glow" />
                     </button>
+                    {submitError && <div style={{ color: 'red' }}>Error: {submitError}</div>}
+                    {submitSuccess && <div style={{ color: 'green' }}>Submitted successfully!</div>}
                   </form>
                 </div>
 

@@ -5,18 +5,9 @@ import { supabase } from '../supabase';
  * Handles content fetching for home, about, and category sections
  */
 
-// Try both table name variations (with and without special character)
+// Use the confirmed working table name
 const getTableName = async () => {
-  // Try without special character first
-  const test1 = await supabase.from('home_about_category_content').select('id').limit(1);
-  if (!test1.error) return 'home_about_category_content';
-  
-  // Try with special character
-  const test2 = await supabase.from('homeـ_about_category_content').select('id').limit(1);
-  if (!test2.error) return 'homeـ_about_category_content';
-  
-  // Default fallback
-  return 'home_about_category_content';
+  return 'homeـ_about_category_content';
 };
 
 // Get all content for a section

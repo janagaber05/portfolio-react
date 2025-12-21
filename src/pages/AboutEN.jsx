@@ -16,11 +16,45 @@ const strengthTransforms = [
   'rotate(-4deg) translate(150px)',
 ];
 
+// Default Q&A cards fallback
+const defaultStackCards = [
+  {
+    id: 1,
+    type: 'dark',
+    title: 'What are my Future Goals as a UX/UI Designer?',
+    description: "As a UX/UI designer I'm working on building my own company specializing in UX/UI design, marketing, branding, content creation and web design."
+  },
+  {
+    id: 2,
+    type: 'pink',
+    title: 'What is my Style as a UX/UI Designer?',
+    description: 'As a UX/UI Designer my style is a mix of simplicity, creativity, and detail. I believe every design should be clear, modern, and easy to use.'
+  },
+  {
+    id: 3,
+    type: 'dark',
+    title: 'What is my Inspiration as a UX/UI Designer?',
+    description: 'As a UX/UI Designer I take my inspiration from every day life, from different industries, and any problem I face or see around me.'
+  },
+  {
+    id: 4,
+    type: 'pink',
+    title: 'What is my Edge as a UX/UI Designer?',
+    description: 'What makes me stand as a UX/UI Designer out that I combine between creative designs and business thinking.'
+  },
+  {
+    id: 5,
+    type: 'dark',
+    title: 'What is my Belief as a UX/UI Designer?',
+    description: 'I believe that a UX/UI Designer should always solve problems, not just decorate screens.'
+  }
+];
+
 export default function AboutEN() {
   const [aboutContent, setAboutContent] = useState([]);
   const [strengthCards, setStrengthCards] = useState([]);
   const [valuesCards, setValuesCards] = useState([]);
-  const [stackCards, setStackCards] = useState([]);
+  const [stackCards, setStackCards] = useState(defaultStackCards);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,20 +81,23 @@ export default function AboutEN() {
           console.log("AboutEN - All keys in data:", res.data.map(item => item.key));
           setAboutContent(res.data || []);
           
-          // Parse metadata for cards
+          // Parse metadata for cards (using your Supabase key names)
           res.data.forEach(item => {
             console.log(`AboutEN - Item key: "${item.key}", has content_en: ${item.content_en ? 'YES' : 'NO'}`);
             if (item.metadata) {
               try {
                 const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
                 
-                if (item.key === 'strengths' && metadata.cards) {
-                  setStrengthCards(metadata.cards);
+                // Use about_strengths key from Supabase
+                if (item.key === 'about_strengths' && (metadata.cards || metadata.strengths)) {
+                  setStrengthCards(metadata.cards || metadata.strengths || []);
                 }
-                if (item.key === 'values' && metadata.cards) {
-                  setValuesCards(metadata.cards);
+                // Use about_values key from Supabase
+                if (item.key === 'about_values' && (metadata.cards || metadata.values)) {
+                  setValuesCards(metadata.cards || metadata.values || []);
                 }
-                if (item.key === 'stack' && metadata.cards) {
+                // Use about_stack_cards key from Supabase
+                if (item.key === 'about_stack_cards' && metadata.cards) {
                   setStackCards(metadata.cards);
                 }
               } catch (e) {
@@ -120,14 +157,14 @@ export default function AboutEN() {
       <section className="hero hero-cover" id="hero" aria-label="About hero">
         <div className="hero-cover-bg" aria-hidden="true" style={{backgroundImage:"url('/imgs/home page/know-me-better-img.png')"}}></div>
         <div className="container hero-center">
-          <h1 className="hero-title">{getContent('hero_title')}</h1>
+          <h1 className="hero-title">{getContent('about_hero_title') || "Let's Know Me Better"}</h1>
         </div>
       </section>
 
       <section className="about-divider" aria-label="Services strip">
         <div className="about-divider__strip">
           <CurvedLoop
-            marqueeText={getContent('services_strip')}
+            marqueeText={getContent('about_divider_text') || 'Graphic Design • Branding • Poster Design'}
             speed={4.2}
             curveAmount={0}
             interactive={false}
@@ -141,8 +178,12 @@ export default function AboutEN() {
             <img src="/imgs/3d-object.png" alt="3D object" />
           </div>
           <div className="know-me__card" role="region" aria-label="Know Me card">
-            <h2>{getContent('know_me_title')}</h2>
-            <div dangerouslySetInnerHTML={{ __html: getContent('know_me_description') }} />
+            <h2>{getContent('about_know_me_1') || "I'm a UX/UI Designer"}</h2>
+            <div dangerouslySetInnerHTML={{ __html: `
+              <p>${getContent('about_know_me_2') || ''}</p>
+              <p>${getContent('about_know_me_3') || ''}</p>
+              <p>${getContent('about_know_me_4') || ''}</p>
+            ` }} />
           </div>
         </div>
       </section>
@@ -157,15 +198,15 @@ export default function AboutEN() {
             />
           </figure>
           <div className="about-approach__text">
-            <h3>{getContent('approach_title')}</h3>
-            <div dangerouslySetInnerHTML={{ __html: getContent('approach_description') }} />
+            <h3>{getContent('about_approach_heading') || 'My Approach as a UX/UI Designer'}</h3>
+            <div dangerouslySetInnerHTML={{ __html: getContent('about_approach_content') }} />
           </div>
         </div>
       </section>
 
       <section className="about-strengths" aria-label="Strengths">
         <div className="container">
-          <h3>{getContent('strengths_title')}</h3>
+          <h3>{getContent('about_strengths_heading') || 'My Strengths as a UX/UI Designer'}</h3>
           {strengthCards.length > 0 && (
             <div className="about-strengths__deck">
               <BounceCards
@@ -184,7 +225,7 @@ export default function AboutEN() {
 
       <section className="about-values" aria-label="My Values as a UX/UI Designer">
         <div className="container">
-          <h3>{getContent('values_title')}</h3>
+          <h3>{getContent('about_values_heading') || 'My Values as a UX/UI Designer'}</h3>
           {valuesCards.length > 0 && (
             <div className="about-values__tilted">
               {valuesCards.map((card, index) => (
@@ -219,10 +260,12 @@ export default function AboutEN() {
             {stackCards.length > 0 && (
               <Stack
                 randomRotation={true}
-                sensitivity={180}
-                sendToBackOnClick={false}
+                sendToBackOnClick={true}
                 cardDimensions={{ width: 320, height: 400 }}
                 cardsData={stackCards}
+                autoplay={true}
+                autoplayDelay={4000}
+                pauseOnHover={true}
               />
             )}
           </div>

@@ -114,9 +114,25 @@ export default function HomeTwoAR() {
   const startY = useRef(0);
   const [entering, setEntering] = useState(true);
 
+  // Hardcoded skills (matching your design)
+  const hardcodedSkills = [
+    { id: 1, name: 'PS', type: 'adobe' },
+    { id: 2, name: 'PR', type: 'adobe' },
+    { id: 3, name: 'AN', type: 'adobe' },
+    { id: 4, name: 'LR', type: 'adobe' },
+    { id: 5, name: 'Figma', type: 'figma' },
+    { id: 6, name: 'PS', type: 'adobe' },
+    { id: 7, name: 'Adobe Acrobat', type: 'adobe-icon' },
+    { id: 8, name: 'AE', type: 'adobe' },
+    { id: 9, name: 'AI', type: 'adobe' },
+    { id: 10, name: 'CSS', type: 'code' },
+    { id: 11, name: 'HTML', type: 'code' },
+    { id: 12, name: 'JS', type: 'code' },
+  ];
+
   // API state
   const [homeContent, setHomeContent] = useState([]);
-  const [skills, setSkills] = useState([]);
+  const [skills] = useState(hardcodedSkills);
   const [experience, setExperience] = useState([]);
   const [strengthCards, setStrengthCards] = useState([]);
   const [valuesCards, setValuesCards] = useState([]);
@@ -145,12 +161,17 @@ export default function HomeTwoAR() {
             if (item.metadata) {
               try {
                 const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
-                if (item.key === 'strengths' && metadata.cards) {
-                  setStrengthCards(metadata.cards);
+                // Handle strengths - can be metadata.cards or metadata.strengths
+                if (item.key === 'strengths') {
+                  const cards = metadata.cards || metadata.strengths || [];
+                  if (cards.length > 0) setStrengthCards(cards);
                 }
-                if (item.key === 'values' && metadata.cards) {
-                  setValuesCards(metadata.cards);
+                // Handle values - can be metadata.cards or metadata.values
+                if (item.key === 'values') {
+                  const cards = metadata.cards || metadata.values || [];
+                  if (cards.length > 0) setValuesCards(cards);
                 }
+                // Handle growing
                 if (item.key === 'growing' && metadata.cards) {
                   setGrowingCards(metadata.cards);
                 }
@@ -167,14 +188,7 @@ export default function HomeTwoAR() {
       }
     }
 
-    async function getAllSkillsAPI() {
-      try {
-        const res = await supabase.from("skills").select("*");
-        if (res.data) setSkills(res.data || []);
-      } catch (err) {
-        console.error("Skills API Error (AR):", err);
-      }
-    }
+    // Skills are now hardcoded, no need to fetch from API
 
     async function getAllExperienceAPI() {
       try {
@@ -186,7 +200,6 @@ export default function HomeTwoAR() {
     }
 
     getAllHomeContentAPI();
-    getAllSkillsAPI();
     getAllExperienceAPI();
   }, []);
 

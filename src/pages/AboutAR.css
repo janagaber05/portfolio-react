@@ -348,6 +348,8 @@
   justify-content:center;
   align-items:center;
   width:100%;
+  min-height:450px;
+  position:relative;
 }
 
 @media (max-width:960px){

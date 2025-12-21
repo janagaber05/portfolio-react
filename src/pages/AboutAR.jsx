@@ -79,7 +79,7 @@ export default function AboutAR() {
         <div className="hero-cover-bg" aria-hidden="true" style={{backgroundImage:"url('/imgs/home page/know-me-better-img.png')"}}></div>
         <div className="container hero-center">
           <h1 className="hero-title">
-            {getContent('hero_title') || ''}
+            {getContent('about_hero_title') || 'دعنا نتعرف عليّ أكثر'}
           </h1>
         </div>
       </section>
@@ -87,7 +87,7 @@ export default function AboutAR() {
       <section className="about-divider" aria-label="Know me better strip">
         <div className="about-divider__strip about-divider__strip--rtl">
           <CurvedLoop
-            marqueeText="Know me better ✦ UX / UI Journey ✦ Motion ✦ Detail ✦"
+            marqueeText={getContent('about_divider_text') || '• تصميم جرافيك • هوية بصرية • Poster Design'}
             speed={4.2}
             curveAmount={0}
             interactive={false}
@@ -101,8 +101,10 @@ export default function AboutAR() {
             <img src="/imgs/3d-object.png" alt="3D object" />
           </div>
           <div className="know-me__card" role="region" aria-label="Know Me card">
-            <h2>{getContent('know_me_title') || ''}</h2>
-            <p>{getContent('know_me_description') || ''}</p>
+            <h2>{getContent('about_know_me_1') || 'أنا مصممة UX/UI'}</h2>
+            <p>{getContent('about_know_me_2') || ''}</p>
+            <p>{getContent('about_know_me_3') || ''}</p>
+            <p>{getContent('about_know_me_4') || ''}</p>
           </div>
         </div>
       </section>
@@ -110,9 +112,9 @@ export default function AboutAR() {
       <section className="about-approach" aria-label="Design approach">
         <div className="container about-approach__grid">
           <div className="about-approach__text">
-            <h3>{getContent('approach_title') || ''}</h3>
+            <h3>{getContent('about_approach_heading') || 'منهجي كمصممة UX/UI'}</h3>
             <p>
-              {getContent('approach_description') || ''}
+              {getContent('about_approach_content') || ''}
             </p>
           </div>
           <figure className="about-approach__media">
@@ -196,9 +198,11 @@ export default function AboutAR() {
           <div className="about-stack__wrapper">
             <Stack
               randomRotation={true}
-              sensitivity={180}
-              sendToBackOnClick={false}
+              sendToBackOnClick={true}
               cardDimensions={{ width: 320, height: 400 }}
+              autoplay={true}
+              autoplayDelay={4000}
+              pauseOnHover={true}
               cardsData={[
                 {
                   id: 1,

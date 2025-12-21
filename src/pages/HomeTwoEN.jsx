@@ -115,9 +115,25 @@ export default function HomeTwoEN() {
   const startY = useRef(0);
   const [entering, setEntering] = useState(true);
   
+  // Hardcoded skills (matching your design)
+  const hardcodedSkills = [
+    { id: 1, name: 'PS', type: 'adobe' },
+    { id: 2, name: 'PR', type: 'adobe' },
+    { id: 3, name: 'AN', type: 'adobe' },
+    { id: 4, name: 'LR', type: 'adobe' },
+    { id: 5, name: 'Figma', type: 'figma' },
+    { id: 6, name: 'PS', type: 'adobe' },
+    { id: 7, name: 'Adobe Acrobat', type: 'adobe-icon' },
+    { id: 8, name: 'AE', type: 'adobe' },
+    { id: 9, name: 'AI', type: 'adobe' },
+    { id: 10, name: 'CSS', type: 'code' },
+    { id: 11, name: 'HTML', type: 'code' },
+    { id: 12, name: 'JS', type: 'code' },
+  ];
+
   // API State
   const [homeContent, setHomeContent] = useState([]);
-  const [skills, setSkills] = useState([]);
+  const [skills] = useState(hardcodedSkills);
   const [experience, setExperience] = useState([]);
   const [strengthCards, setStrengthCards] = useState([]);
   const [valuesCards, setValuesCards] = useState([]);
@@ -171,14 +187,23 @@ export default function HomeTwoEN() {
                 const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
                 console.log(`Metadata for ${item.key}:`, metadata);
                 
-                if (item.key === 'strengths' && metadata.cards) {
-                  console.log("✅ Setting strength cards:", metadata.cards.length);
-                  setStrengthCards(metadata.cards);
+                // Handle strengths - can be metadata.cards or metadata.strengths
+                if (item.key === 'strengths') {
+                  const cards = metadata.cards || metadata.strengths || [];
+                  if (cards.length > 0) {
+                    console.log("✅ Setting strength cards:", cards.length);
+                    setStrengthCards(cards);
+                  }
                 }
-                if (item.key === 'values' && metadata.cards) {
-                  console.log("✅ Setting values cards:", metadata.cards.length);
-                  setValuesCards(metadata.cards);
+                // Handle values - can be metadata.cards or metadata.values
+                if (item.key === 'values') {
+                  const cards = metadata.cards || metadata.values || [];
+                  if (cards.length > 0) {
+                    console.log("✅ Setting values cards:", cards.length);
+                    setValuesCards(cards);
+                  }
                 }
+                // Handle growing - can be metadata.cards
                 if (item.key === 'growing' && metadata.cards) {
                   console.log("✅ Setting growing cards:", metadata.cards.length);
                   setGrowingCards(metadata.cards);
@@ -198,17 +223,7 @@ export default function HomeTwoEN() {
       }
     }
     
-    async function getAllSkillsAPI() {
-      try {
-        const res = await supabase.from("skills").select("*");
-        console.log("Skills:", res);
-        if (res.data) {
-          setSkills(res.data || []);
-        }
-      } catch (err) {
-        console.error("Skills API Error:", err);
-      }
-    }
+    // Skills are now hardcoded, no need to fetch from API
     
     async function getAllExperienceAPI() {
       try {
@@ -223,7 +238,6 @@ export default function HomeTwoEN() {
     }
     
     getAllHomeContentAPI();
-    getAllSkillsAPI();
     getAllExperienceAPI();
   }, []);
 
@@ -333,7 +347,7 @@ export default function HomeTwoEN() {
               </div>
               <div className="home-two__card" role="region" aria-label="Know Me card">
                 <h2>{getContent('know_me_title') || 'Know Me (No data from API)'}</h2>
-                <div dangerouslySetInnerHTML={{ __html: getContent('know_me_description') || '<p>No description from API</p>' }} />
+                <div dangerouslySetInnerHTML={{ __html: getContent('know_me_content') || '<p>No content from API</p>' }} />
               </div>
             </div>
           </section>
@@ -380,7 +394,7 @@ export default function HomeTwoEN() {
               </figure>
               <div className="home-two-approach__text">
                 <h3>{getContent('approach_title')}</h3>
-                <div dangerouslySetInnerHTML={{ __html: getContent('approach_description') }} />
+                <div dangerouslySetInnerHTML={{ __html: getContent('approach_content') }} />
               </div>
             </div>
           </section>
@@ -394,17 +408,15 @@ export default function HomeTwoEN() {
                 </div>
                 <div className="home-two-skills__matrix" role="list">
                   {skills.map((skill) => {
-                    const skillName = skill.name?.toLowerCase() || '';
-                    const isFigma = skillName.includes('figma');
-                    const isAdobe = skillName.includes('adobe');
-                    const displayLabel = skill.name || skill.label || '';
+                    const isFigma = skill.type === 'figma';
+                    const isAdobeIcon = skill.type === 'adobe-icon';
                     
                     return (
                       <span
                         key={skill.id}
                         role="listitem"
-                        className={`home-two-skills__icon ${isFigma ? 'home-two-skills__icon--figma' : ''} ${isAdobe ? 'home-two-skills__icon--adobe' : ''}`}
-                        aria-label={isFigma || isAdobe ? displayLabel : undefined}
+                        className={`home-two-skills__icon ${isFigma ? 'home-two-skills__icon--figma' : ''} ${isAdobeIcon ? 'home-two-skills__icon--adobe' : ''}`}
+                        aria-label={skill.name}
                       >
                         {isFigma ? (
                           <svg viewBox="0 0 60 90" className="home-two-skills__figma" aria-hidden="true">
@@ -421,10 +433,10 @@ export default function HomeTwoEN() {
                               <circle cx="30" cy="72" r="18" fill="#1abcfe" />
                             </g>
                           </svg>
-                        ) : isAdobe ? (
-                          <span aria-hidden="true">A</span>
+                        ) : isAdobeIcon ? (
+                          <span className="home-two-skills__adobe-a" aria-hidden="true">A</span>
                         ) : (
-                          displayLabel
+                          skill.name
                         )}
                       </span>
                     );
@@ -474,7 +486,7 @@ export default function HomeTwoEN() {
             <div className="container home-two-app__grid">
               <div className="home-two-app__text">
                 <h3>{getContent('app_design_title')}</h3>
-                <div dangerouslySetInnerHTML={{ __html: getContent('app_design_description') }} />
+                <div dangerouslySetInnerHTML={{ __html: getContent('app_design_content') }} />
               </div>
               <div className="home-two-app__media" aria-hidden="true">
                 <span className="home-two-app__label">App design</span>

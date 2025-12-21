@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform } from 'motion/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Stack.css';
 
 function CardRotate({ children, onSendToBack, sensitivity }) {
@@ -36,51 +36,91 @@ export default function Stack({
   randomRotation = false,
   sensitivity = 200,
   cardDimensions = { width: 320, height: 400 },
+  cards = [],
   cardsData = [],
   animationConfig = { stiffness: 260, damping: 20 },
-  sendToBackOnClick = false
+  sendToBackOnClick = false,
+  autoplay = false,
+  autoplayDelay = 3000,
+  pauseOnHover = false
 }) {
-  const [cards, setCards] = useState(
-    cardsData.length
-      ? cardsData
-      : [
-          { id: 1, type: 'dark', title: 'Card 1', description: 'Default card description' },
-          { id: 2, type: 'purple', title: 'Card 2', description: 'Default card description' },
-          { id: 3, type: 'dark', title: 'Card 3', description: 'Default card description' },
-          { id: 4, type: 'purple', title: 'Card 4', description: 'Default card description' }
-        ]
-  );
+  const [isPaused, setIsPaused] = useState(false);
+
+  const [stack, setStack] = useState(() => {
+    if (cards.length) {
+      return cards.map((content, index) => ({ id: index + 1, content, isCustom: true }));
+    }
+    if (cardsData.length) {
+      return cardsData.map((card, index) => ({ 
+        id: card.id || index + 1, 
+        type: card.type || 'dark',
+        title: card.title,
+        description: card.description,
+        isCustom: false 
+      }));
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    if (cards.length) {
+      setStack(cards.map((content, index) => ({ id: index + 1, content, isCustom: true })));
+    } else if (cardsData.length) {
+      setStack(cardsData.map((card, index) => ({ 
+        id: card.id || index + 1, 
+        type: card.type || 'dark',
+        title: card.title,
+        description: card.description,
+        isCustom: false 
+      })));
+    }
+  }, [cards, cardsData]);
 
   const sendToBack = id => {
-    setCards(prev => {
-      const newCards = [...prev];
-      const index = newCards.findIndex(card => card.id === id);
-      const [card] = newCards.splice(index, 1);
-      newCards.unshift(card);
-      return newCards;
+    setStack(prev => {
+      const newStack = [...prev];
+      const index = newStack.findIndex(card => card.id === id);
+      const [card] = newStack.splice(index, 1);
+      newStack.unshift(card);
+      return newStack;
     });
   };
+
+  useEffect(() => {
+    if (autoplay && stack.length > 1 && !isPaused) {
+      const interval = setInterval(() => {
+        const topCardId = stack[stack.length - 1].id;
+        sendToBack(topCardId);
+      }, autoplayDelay);
+      return () => clearInterval(interval);
+    }
+  }, [autoplay, autoplayDelay, stack, isPaused]);
+
+  if (stack.length === 0) return null;
 
   return (
     <div
       className="stack-container"
-      style={{
-        width: cardDimensions.width,
-        height: cardDimensions.height,
-        perspective: 600
-      }}
+      style={{ width: cardDimensions.width, height: cardDimensions.height }}
+      onMouseEnter={() => pauseOnHover && setIsPaused(true)}
+      onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
-      {cards.map((card, index) => {
+      {stack.map((card, index) => {
         const randomRotate = randomRotation ? Math.random() * 10 - 5 : 0;
+        const cardType = card.type === 'pink' || card.type === 'purple' ? 'purple' : 'dark';
 
         return (
-          <CardRotate key={card.id} onSendToBack={() => sendToBack(card.id)} sensitivity={sensitivity}>
+          <CardRotate
+            key={card.id}
+            onSendToBack={() => sendToBack(card.id)}
+            sensitivity={sensitivity}
+          >
             <motion.div
-              className={`card ${card.type ? `card--${card.type}` : ''}`.trim()}
+              className={`stack-card stack-card--${cardType}`}
               onClick={() => sendToBackOnClick && sendToBack(card.id)}
               animate={{
-                rotateZ: (cards.length - index - 1) * 4 + randomRotate,
-                scale: 1 + index * 0.06 - cards.length * 0.06,
+                rotateZ: (stack.length - index - 1) * 4 + randomRotate,
+                scale: 1 + index * 0.06 - stack.length * 0.06,
                 transformOrigin: '90% 90%'
               }}
               initial={false}
@@ -94,12 +134,12 @@ export default function Stack({
                 height: cardDimensions.height
               }}
             >
-              {card.img ? (
-                <img src={card.img} alt={`card-${card.id}`} className="card-image" />
+              {card.isCustom ? (
+                card.content
               ) : (
-                <div className="card-content">
-                  {card.title && <h4 className="card-title">{card.title}</h4>}
-                  {card.description && <p className="card-description">{card.description}</p>}
+                <div className="stack-card__content">
+                  <h4 className="stack-card__title">{card.title}</h4>
+                  <p className="stack-card__text">{card.description}</p>
                 </div>
               )}
             </motion.div>

@@ -116,13 +116,13 @@ export default function HomeOneAR() {
         >
           <div className="home-one-hero__text">
             <h1 className="home-one-hero__title">
-              {getContent('hero_title') || ''}
+              {getContent('hero_title') || 'مرحباً، أنا جنا'}
             </h1>
             <p className="home-one-hero__subtitle">
-              {getContent('hero_subtitle') || ''}
+              {getContent('hero_subtitle') || 'مصممة UX/UI'}
             </p>
             <p className="home-one-hero__paragraph">
-              {getContent('hero_paragraph') || ''}
+              {getContent('hero_paragraph') || 'أصمم تجارب رقمية جميلة تركز على المستخدم وتحول الأفكار إلى واقع.'}
             </p>
           </div>
           <div className="home-one-hero__image" aria-hidden="true">

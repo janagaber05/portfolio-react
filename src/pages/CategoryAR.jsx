@@ -10,9 +10,9 @@ export default function CategoryAR() {
 
   useEffect(() => {
     setHero({
-      title: getContent('hero_title') || '',
-      subline: getContent('hero_subtitle') || '',
-      muted: getContent('hero_paragraph') || '',
+      title: getContent('category_hero_title') || 'أعمالي',
+      subline: getContent('category_hero_subtitle') || 'استكشفي مشاريعي الإبداعية',
+      muted: getContent('category_hero_description') || 'مجموعة من تصميمات UX/UI ومشاريع الويب والأعمال الإبداعية',
     });
   }, [getContent]);
 
@@ -57,9 +57,9 @@ export default function CategoryAR() {
 
       <section className="cta-band" id="contact" aria-label="دعوة للتواصل" style={{backgroundImage:"url('/imgs/us working together.png')"}}>
         <div className="container">
-          <p className="muted muted-centered">تعرفي ما الذي ينقص؟</p>
-          <h3 className="section-title centered section-title-spaced">أن نعمل معاً</h3>
-          <p className="btn-wrapper-centered"><a className="btn" href="/ar#contact">تواصلي معي</a></p>
+          <p className="muted muted-centered">{getContent('category_cta_text') || 'تعرفي ما الذي ينقص؟'}</p>
+          <h3 className="section-title centered section-title-spaced">{getContent('category_cta_title') || 'أن نعمل معاً'}</h3>
+          <p className="btn-wrapper-centered"><a className="btn" href="/ar#contact">{getContent('category_cta_button') || 'تواصلي معي'}</a></p>
         </div>
       </section>
     </Layout>

@@ -1,0 +1,26 @@
+{
+  "short_name": "Jana Gaber",
+  "name": "Jana Gaber Portfolio",
+  "icons": [
+    {
+      "src": "imgs/logo/logo-small.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/logo/logo-big.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "imgs/logo/logo-big.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#5227FF",
+  "background_color": "#0d0b17"
+}
+

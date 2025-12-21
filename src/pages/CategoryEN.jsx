@@ -55,9 +55,9 @@ export default function CategoryEN() {
         <div className="container hero-center">
           <div className="work-hero__content">
             <div className="work-hero__text">
-              <h1 className="hero-title">{getContent('hero_title')}</h1>
-              <p className="subline subline-centered">{getContent('hero_subtitle')}</p>
-              <p className="muted muted-centered">{getContent('hero_description')}</p>
+              <h1 className="hero-title">{getContent('category_hero_title') || 'My Work'}</h1>
+              <p className="subline subline-centered">{getContent('category_hero_subtitle') || 'Explore my creative projects'}</p>
+              <p className="muted muted-centered">{getContent('category_hero_description') || 'A collection of UX/UI designs, web projects, and creative work'}</p>
               <p className="btn-wrapper-centered"><a className="btn" href="#cats">Explore More</a></p>
             </div>
             <div className="work-hero__image" aria-hidden="true">
@@ -89,9 +89,9 @@ export default function CategoryEN() {
 
       <section className="cta-band" id="contact" aria-label="Contact CTA" style={{backgroundImage:"url('/imgs/us working together.png')"}}>
         <div className="container">
-          <p className="muted muted-centered">Do you know what's Missing</p>
-          <h3 className="section-title centered section-title-spaced">Us Working Together</h3>
-          <p className="btn-wrapper-centered"><a className="btn" href="/#contact">Contact me</a></p>
+          <p className="muted muted-centered">{getContent('category_cta_text') || "Do you know what's Missing"}</p>
+          <h3 className="section-title centered section-title-spaced">{getContent('category_cta_title') || 'Us Working Together'}</h3>
+          <p className="btn-wrapper-centered"><a className="btn" href="/#contact">{getContent('category_cta_button') || 'Contact me'}</a></p>
         </div>
       </section>
     </Layout>
